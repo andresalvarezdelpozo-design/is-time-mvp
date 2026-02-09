@@ -4,7 +4,7 @@ class App {
         this.username = localStorage.getItem('isTimeUsername');
         this.apiUrl = window.location.hostname === 'localhost' 
             ? 'http://localhost:3000/api' 
-            : 'https://tu-app-en-render.onrender.com/api';
+            : 'https://is-time-web.onrender.com';
         this.friends = [];
         this.selectedFriend = null;
         this.selectedAmount = 3600000; // 1h por defecto
