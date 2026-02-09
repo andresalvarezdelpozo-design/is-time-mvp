@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <title>IS TIME</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div id="app">
+        <!-- SPLASH -->
+        <div id="splash" class="screen active">
+            <div class="logo-container">
+                <h1 class="logo">IS TIME</h1>
+                <div class="digital-numbers">00:00:00</div>
+            </div>
+            <div class="pulse-indicator"></div>
+        </div>
+
+        <!-- REGISTRO -->
+        <div id="register" class="screen">
+            <div class="register-container">
+                <h2>ELIGE TU NOMBRE</h2>
+                <p class="subtitle">2-12 caracteres. Solo una vida.</p>
+                <input type="text" id="usernameInput" maxlength="12" placeholder="Tu nombre" autocomplete="off">
+                <button id="startBtn" class="btn-neon">START</button>
+                <div class="rules">
+                    <p>⚠️ Tu tiempo empieza a bajar inmediatamente</p>
+                    <p>⚠️ Gana tiempo con amigos reales</p>
+                    <p>⚠️ A 00:00:00 quedas congelado</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOME -->
+        <div id="home" class="screen">
+            <div class="timer-container">
+                <div id="timer" class="timer">00:00:00</div>
+                <div class="timer-label">TIEMPO RESTANTE</div>
+            </div>
+            
+            <div class="pulse-heart" id="pulseHeart">
+                <div class="heart-icon">♥</div>
+                <div class="pulse-wave"></div>
+            </div>
+
+            <div class="actions-grid">
+                <button class="action-btn" onclick="app.showScreen('makeFriend')">
+                    <span class="btn-icon">👥</span>
+                    <span class="btn-text">MAKE FRIEND</span>
+                    <span class="btn-hint">+24h → +12h → +4h</span>
+                </button>
+                
+                <button class="action-btn" onclick="app.showScreen('sendTime')">
+                    <span class="btn-icon">⚡</span>
+                    <span class="btn-text">SEND TIME</span>
+                    <span class="btn-hint">1h / día</span>
+                </button>
+                
+                <button class="action-btn" onclick="app.showScreen('play')">
+                    <span class="btn-icon">🎮</span>
+                    <span class="btn-text">PLAY</span>
+                    <span class="btn-hint">5 tokens</span>
+                </button>
+                
+                <button class="action-btn" onclick="app.showScreen('friends')">
+                    <span class="btn-icon">📋</span>
+                    <span class="btn-text">FRIENDS</span>
+                    <span class="btn-hint" id="friendCount">0 amigos</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- MAKE FRIEND -->
+        <div id="makeFriend" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="app.showScreen('home')">←</button>
+                <h2>MAKE FRIEND</h2>
+            </div>
+            
+            <div class="nfc-container">
+                <div class="nfc-animation" id="nfcAnimation">
+                    <div class="phone-left">📱</div>
+                    <div class="connection-waves">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="phone-right">📱</div>
+                </div>
+                <p class="nfc-text">Acerca los móviles</p>
+                <p class="nfc-sub">o escanea el QR</p>
+            </div>
+
+            <div class="qr-container" id="qrContainer">
+                <canvas id="qrCanvas"></canvas>
+                <div class="qr-timer" id="qrTimer">10</div>
+                <p class="qr-hint">QR válido por 10 segundos</p>
+            </div>
+
+            <div class="friend-rewards">
+                <div class="reward-item active" data-tier="1">1º +24h</div>
+                <div class="reward-item" data-tier="2">2º +12h</div>
+                <div class="reward-item" data-tier="3">3º +4h</div>
+                <div class="reward-item disabled" data-tier="4">4º 0h</div>
+            </div>
+
+            <button class="btn-scan" onclick="app.startScan()">
+                ESCANEAR QR
+            </button>
+        </div>
+
+        <!-- SEND TIME -->
+        <div id="sendTime" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="app.showScreen('home')">←</button>
+                <h2>SEND TIME</h2>
+            </div>
+
+            <div class="friends-list" id="sendTimeFriends"></div>
+            
+            <div class="transfer-container" id="transferContainer" style="display:none;">
+                <div class="selected-friend" id="selectedFriend"></div>
+                
+                <div class="time-slider-container">
+                    <input type="range" id="timeSlider" min="3600000" max="86400000" step="3600000" value="3600000">
+                    <div class="slider-labels">
+                        <span>1h</span>
+                        <span>12h</span>
+                        <span>24h</span>
+                    </div>
+                </div>
+                
+                <div class="transfer-preview">
+                    <div class="preview-from">
+                        <span>Tú:</span>
+                        <span id="previewFromTime">00:00:00</span>
+                    </div>
+                    <div class="transfer-arrow">→</div>
+                    <div class="preview-to">
+                        <span id="previewToName">Amigo</span>
+                        <span id="previewToTime">+01:00:00</span>
+                    </div>
+                </div>
+
+                <button class="btn-neon btn-confirm" onclick="app.confirmTransfer()">
+                    CONFIRMAR TRANSFERENCIA
+                </button>
+            </div>
+        </div>
+
+        <!-- PLAY (TOKENS) -->
+        <div id="play" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="app.showScreen('home')">←</button>
+                <h2>PLAY</h2>
+                <div class="tokens-left" id="tokensLeft">5 tokens</div>
+            </div>
+
+            <div class="friends-list" id="tokenFriends"></div>
+            
+            <div class="tokens-container" id="tokensContainer" style="display:none;">
+                <div class="selected-friend-token" id="selectedFriendToken"></div>
+                
+                <div class="tokens-grid">
+                    <button class="token-btn" data-type="1" onclick="app.sendToken(1)">
+                        <span class="token-text">"¡Pásame un pito de vida, colega!"</span>
+                        <span class="token-effect">+ tiempo</span>
+                    </button>
+                    <button class="token-btn" data-type="2" onclick="app.sendToken(2)">
+                        <span class="token-text">"Me acuerdo de ti"</span>
+                        <span class="token-effect">social</span>
+                    </button>
+                    <button class="token-btn" data-type="3" onclick="app.sendToken(3)">
+                        <span class="token-text">"¿Qué pasa, máquina?"</span>
+                        <span class="token-effect">social</span>
+                    </button>
+                    <button class="token-btn" data-type="4" onclick="app.sendToken(4)">
+                        <span class="token-text">"Vamos a liarla"</span>
+                        <span class="token-effect">social</span>
+                    </button>
+                    <button class="token-btn" data-type="5" onclick="app.sendToken(5)">
+                        <span class="token-text">"No me falles hoy"</span>
+                        <span class="token-effect">social</span>
+                    </button>
+                </div>
+
+                <div class="combo-info">
+                    Usa los 5 tokens a amigos distintos → <span class="highlight">+6h bonus</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FRIENDS LIST -->
+        <div id="friends" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="app.showScreen('home')">←</button>
+                <h2>TUS AMIGOS</h2>
+            </div>
+            <div class="friends-list-full" id="friendsListFull"></div>
+        </div>
+
+        <!-- CONGELADO -->
+        <div id="frozen" class="screen">
+            <div class="frozen-container">
+                <div class="frozen-timer blink">00:00:00</div>
+                <h1 class="frozen-title">ESTÁS CONGELADO</h1>
+                <p class="frozen-subtitle">Tu tiempo se agotó</p>
+                
+                <div class="frozen-stats">
+                    <div class="stat">
+                        <span class="stat-label">Día 1:</span>
+                        <span class="stat-value">-1 amigo</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Día 2:</span>
+                        <span class="stat-value">-2 amigos</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Día 3:</span>
+                        <span class="stat-value">Todos perdidos</span>
+                    </div>
+                </div>
+
+                <div class="frozen-options">
+                    <div class="option-wait">
+                        <p>Espera 48h para resucitar</p>
+                        <div class="countdown" id="resurrectCountdown">47:59:59</div>
+                        <p class="resurrect-note">Volverás con 12h, 0 amigos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANIMACIÓN DE TRANSFERENCIA -->
+        <div id="transferAnimation" class="overlay">
+            <div class="transfer-beam"></div>
+            <div class="transfer-particles"></div>
+            <div class="transfer-numbers" id="transferNumbers">+01:00:00</div>
+        </div>
+    </div>
+
+    <script src="js/audio.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/qr.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
