@@ -29,7 +29,7 @@ body {
     align-items: center;
 }
 
-/* SPLASH 1: CENTRADO PERFECTO */
+/* SPLASH 1 */
 #splash1 {
     cursor: pointer;
 }
@@ -40,41 +40,43 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3rem;
+    gap: 2rem;
+    padding: 20px;
 }
 
 .logo-main {
-    font-size: 4rem;
-    font-weight: 900;
-    letter-spacing: 1.5rem;
+    font-size: 3.5rem;
+    font-weight: 400; /* FINA */
+    letter-spacing: 1.2rem;
     color: #00ff41;
-    text-shadow: 0 0 40px #00ff41, 0 0 80px #00ff41;
+    text-shadow: 0 0 30px #00ff41;
 }
 
 .timer-countdown {
-    font-size: 2.5rem;
-    font-weight: 700;
-    letter-spacing: 0.5rem;
+    font-size: 2rem;
+    font-weight: 400; /* FINA */
+    letter-spacing: 0.4rem;
     color: #00ff41;
-    text-shadow: 0 0 20px #00ff41;
+    text-shadow: 0 0 15px #00ff41;
     font-variant-numeric: tabular-nums;
 }
 
 .click-hint {
     position: absolute;
-    bottom: 15%;
-    font-size: 0.8rem;
-    letter-spacing: 0.3rem;
+    bottom: 12%;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.2rem;
     opacity: 0.4;
     animation: blink 2s infinite;
 }
 
 @keyframes blink {
     0%, 100% { opacity: 0.2; }
-    50% { opacity: 0.6; }
+    50% { opacity: 0.5; }
 }
 
-/* SPLASH 2: FRASES CON PULSO */
+/* SPLASH 2 */
 #splash2 {
     cursor: pointer;
     background: #000;
@@ -84,112 +86,112 @@ body {
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: 3rem;
+    padding: 20px;
 }
 
 .rule-line {
-    font-size: 1.2rem;
-    font-weight: 700;
-    letter-spacing: 0.3rem;
+    font-size: 1rem;
+    font-weight: 400; /* FINA */
+    letter-spacing: 0.25rem;
     color: #00ff41;
-    text-shadow: 0 0 20px #00ff41;
+    text-shadow: 0 0 10px #00ff41;
     opacity: 0;
-    transform: scale(0.8);
 }
 
 .rule-line.show {
-    animation: pulseIn 1.5s forwards;
+    animation: pulseIn 1.2s forwards;
 }
 
 @keyframes pulseIn {
     0% { 
         opacity: 0; 
-        transform: scale(0.8);
+        transform: scale(0.9);
         text-shadow: 0 0 0 #00ff41;
     }
     50% { 
         opacity: 1; 
-        transform: scale(1.1);
-        text-shadow: 0 0 40px #00ff41, 0 0 80px #00ff41;
+        transform: scale(1.02);
+        text-shadow: 0 0 30px #00ff41, 0 0 60px #00ff41;
     }
     100% { 
         opacity: 1; 
         transform: scale(1);
-        text-shadow: 0 0 20px #00ff41;
+        text-shadow: 0 0 15px #00ff41;
     }
 }
 
 /* HOME */
 #home {
     justify-content: flex-start;
-    padding-top: 10vh;
+    padding-top: 12vh;
 }
 
 .user-id {
     position: absolute;
     top: 3vh;
     right: 5vw;
-    font-size: 0.8rem;
-    opacity: 0.6;
-    letter-spacing: 0.2rem;
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.5;
+    letter-spacing: 0.15rem;
 }
 
 .timer-main {
-    font-size: 4rem;
-    font-weight: 900;
-    letter-spacing: 0.3rem;
+    font-size: 3.5rem;
+    font-weight: 400; /* FINA */
+    letter-spacing: 0.25rem;
     color: #00ff41;
-    text-shadow: 0 0 40px #00ff41;
+    text-shadow: 0 0 30px #00ff41;
     font-variant-numeric: tabular-nums;
     margin-bottom: 3vh;
 }
 
 .pulse-heart {
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: #ff0040;
-    text-shadow: 0 0 20px #ff0040;
+    text-shadow: 0 0 15px #ff0040;
     margin-bottom: 6vh;
-    animation: heartbeat 1s infinite;
+    animation: heartbeat 1.2s infinite;
 }
 
 @keyframes heartbeat {
     0%, 100% { transform: scale(1); opacity: 0.3; }
-    15% { transform: scale(1.2); opacity: 1; }
-    30% { transform: scale(1); opacity: 0.3; }
-    45% { transform: scale(1.1); opacity: 0.8; }
+    25% { transform: scale(1.15); opacity: 1; }
+    50% { transform: scale(1); opacity: 0.3; }
 }
 
 .menu-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 12px;
     width: 85%;
-    max-width: 400px;
+    max-width: 380px;
 }
 
 .menu-btn {
-    padding: 30px 20px;
+    padding: 25px 15px;
     background: rgba(0,255,65,0.05);
-    border: 1px solid rgba(0,255,65,0.3);
+    border: 1px solid rgba(0,255,65,0.25);
     color: #00ff41;
     font-family: 'Orbitron', monospace;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.2rem;
+    font-size: 0.9rem;
+    font-weight: 400; /* FINA */
+    letter-spacing: 0.15rem;
     cursor: pointer;
     transition: all 0.3s;
 }
 
 .menu-btn:hover {
-    background: rgba(0,255,65,0.15);
+    background: rgba(0,255,65,0.12);
     border-color: #00ff41;
-    box-shadow: 0 0 25px rgba(0,255,65,0.3);
+    box-shadow: 0 0 20px rgba(0,255,65,0.25);
 }
 
 /* Responsive */
 @media (max-width: 400px) {
-    .logo-main { font-size: 3rem; letter-spacing: 1rem; }
-    .timer-countdown { font-size: 2rem; }
-    .timer-main { font-size: 3rem; }
-    .rule-line { font-size: 1rem; }
+    .logo-main { font-size: 2.5rem; letter-spacing: 0.8rem; }
+    .timer-countdown { font-size: 1.6rem; letter-spacing: 0.3rem; }
+    .timer-main { font-size: 2.8rem; }
+    .rule-line { font-size: 0.85rem; letter-spacing: 0.15rem; }
 }
