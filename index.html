@@ -9,46 +9,41 @@
 </head>
 <body>
     <div id="app">
-        <!-- SPLASH -->
-        <div id="splash" class="screen active" onclick="app.skipSplash()">
-            <div class="splash-center">
-                <h1 class="logo">IS TIME</h1>
-                <div class="timer-splash" id="splashTimer">00:00:00</div>
+        <!-- SPLASH 1: IS TIME + cuenta regresiva -->
+        <div id="splash1" class="screen active" onclick="app.showRules()">
+            <div class="splash-main">
+                <h1 class="logo-main">IS TIME</h1>
+                <div class="timer-countdown" id="countdownTimer">24:00:00</div>
             </div>
-            <div class="rules-container" id="rulesContainer">
-                <p class="rule-text">TU TIEMPO DEFINE TU POSICION</p>
-                <p class="rule-text">GANAS TIEMPO CON PERSONAS REALES</p>
-                <p class="rule-text">CUANDO LLEGA A CERO, DESAPARECES</p>
-            </div>
-            <div class="click-hint">[ CLICK PARA CONTINUAR ]</div>
+            <div class="click-hint">[ TOCAR PARA CONTINUAR ]</div>
         </div>
 
-        <!-- REGISTRO -->
-        <div id="register" class="screen">
-            <div class="register-box">
-                <h2>IDENTIDAD</h2>
-                <input type="text" id="usernameInput" maxlength="12" placeholder="NOMBRE" autocomplete="off">
-                <button id="startBtn" class="btn-start">INICIAR</button>
-                <div class="error-msg" id="errorMsg"></div>
+        <!-- SPLASH 2: 3 frases -->
+        <div id="splash2" class="screen" onclick="app.startGame()">
+            <div class="rules-main">
+                <p class="rule-line" id="rule1">TU TIEMPO DEFINE TU POSICION</p>
+                <p class="rule-line" id="rule2">GANAS TIEMPO CON PERSONAS REALES</p>
+                <p class="rule-line" id="rule3">CUANDO LLEGA A CERO, DESAPARECES</p>
             </div>
         </div>
 
-        <!-- HOME -->
+        <!-- HOME: directo al juego -->
         <div id="home" class="screen">
+            <div class="user-id" id="userIdDisplay">ID: X7K9M2</div>
             <div class="timer-main" id="timerDisplay">72:00:00</div>
             <div class="pulse-heart" id="pulseHeart">♥</div>
             
             <div class="menu-grid">
-                <button class="menu-btn" onclick="app.showScreen('makeFriend')">
+                <button class="menu-btn" onclick="app.makeFriend()">
                     <span class="btn-label">MAKE FRIEND</span>
                 </button>
-                <button class="menu-btn" onclick="app.showScreen('sendTime')">
+                <button class="menu-btn" onclick="app.sendTime()">
                     <span class="btn-label">SEND TIME</span>
                 </button>
-                <button class="menu-btn" onclick="app.showScreen('play')">
+                <button class="menu-btn" onclick="app.playTokens()">
                     <span class="btn-label">PLAY</span>
                 </button>
-                <button class="menu-btn" onclick="app.showScreen('friends')">
+                <button class="menu-btn" onclick="app.showFriends()">
                     <span class="btn-label">FRIENDS</span>
                 </button>
             </div>
