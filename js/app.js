@@ -5,10 +5,15 @@ class App {
         this.userId = null;
         this.username = this.generateRandomId();
         this.countdownInterval = null;
+        this.canClick = false;
     }
 
     init() {
-        this.startCountdown();
+        // Esperar un poco para que todo cargue
+        setTimeout(() => {
+            this.canClick = true;
+            this.startCountdown();
+        }, 500);
     }
 
     generateRandomId() {
@@ -21,40 +26,57 @@ class App {
     }
 
     startCountdown() {
-        // 24 horas en segundos
-        let totalSeconds = 24 * 3600;
-        const el = document.getElementById('countdownTimer');
+        // Empezar en 24:00:00 y bajar
+        let totalSeconds = 24 * 3600; // 24 horas en segundos
         
-        this.countdownInterval = setInterval(() => {
-            totalSeconds--;
-            
+        const updateTimer = () => {
             const h = Math.floor(totalSeconds / 3600);
             const m = Math.floor((totalSeconds % 3600) / 60);
             const s = totalSeconds % 60;
             
-            el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            const el = document.getElementById('countdownTimer');
+            if (el) {
+                el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            }
             
-            // Si llega a 0, reinicia (loop para demo)
-            if (totalSeconds <= 0) {
+            totalSeconds--;
+            
+            // Si llega a 0, reinicia
+            if (totalSeconds < 0) {
                 totalSeconds = 24 * 3600;
             }
-        }, 1000);
+        };
+        
+        updateTimer(); // Primera vez inmediato
+        this.countdownInterval = setInterval(updateTimer, 1000); // Luego cada segundo real
     }
 
     showRules() {
+        if (!this.canClick) return;
+        
         clearInterval(this.countdownInterval);
         
         document.getElementById('splash1').classList.remove('active');
         document.getElementById('splash2').classList.add('active');
         
-        // Animar frases secuencialmente
-        setTimeout(() => document.getElementById('rule1').classList.add('show'), 300);
-        setTimeout(() => document.getElementById('rule2').classList.add('show'), 1800);
-        setTimeout(() => document.getElementById('rule3').classList.add('show'), 3300);
+        // Mostrar frases una por una
+        setTimeout(() => {
+            document.getElementById('rule1').classList.add('show');
+        }, 200);
+        
+        setTimeout(() => {
+            document.getElementById('rule2').classList.add('show');
+        }, 1400);
+        
+        setTimeout(() => {
+            document.getElementById('rule3').classList.add('show');
+        }, 2600);
     }
 
     async startGame() {
-        // Crear usuario automáticamente
+        if (!this.canClick) return;
+        
+        // Crear usuario en backend
         try {
             const res = await fetch(`${API_URL}/register`, {
                 method: 'POST',
@@ -66,29 +88,32 @@ class App {
             
             if (data.user) {
                 this.userId = data.user.id;
-            } else {
-                // Si existe, generar otro
+            } else if (data.error && data.error.includes('existe')) {
+                // Si existe, probar con otro ID
                 this.username = this.generateRandomId();
                 return this.startGame();
             }
             
         } catch (err) {
-            console.error('Error registro:', err);
+            console.log('Error conexión, modo offline');
+            this.userId = 'offline-' + this.username;
         }
         
+        // Cambiar pantalla
         document.getElementById('splash2').classList.remove('active');
         document.getElementById('home').classList.add('active');
         
+        // Mostrar ID
         document.getElementById('userIdDisplay').textContent = `ID: ${this.username}`;
         
+        // Iniciar timer de juego (72h)
         this.startGameTimer();
     }
 
     startGameTimer() {
         let ms = 72 * 3600000; // 72 horas
-        const el = document.getElementById('timerDisplay');
         
-        setInterval(() => {
+        const updateTimer = () => {
             ms -= 1000;
             if (ms < 0) ms = 0;
             
@@ -96,24 +121,24 @@ class App {
             const m = Math.floor((ms % 3600000) / 60000);
             const s = Math.floor((ms % 60000) / 1000);
             
-            el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            
-            // Cambiar color según tiempo
-            if (ms < 6 * 3600000) {
-                el.style.color = '#ff0040';
-                el.style.textShadow = '0 0 40px #ff0040';
-            } else if (ms < 24 * 3600000) {
-                el.style.color = '#00d4ff';
-                el.style.textShadow = '0 0 40px #00d4ff';
+            const el = document.getElementById('timerDisplay');
+            if (el) {
+                el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
             }
-        }, 1000);
+        };
+        
+        updateTimer();
+        setInterval(updateTimer, 1000);
     }
 
-    makeFriend() { alert('MAKE FRIEND - QR/NFC'); }
-    sendTime() { alert('SEND TIME'); }
-    playTokens() { alert('PLAY TOKENS'); }
-    showFriends() { alert('FRIENDS LIST'); }
+    makeFriend() { alert('MAKE FRIEND - Escanea QR'); }
+    sendTime() { alert('SEND TIME - Transferir tiempo'); }
+    playTokens() { alert('PLAY - 5 tokens'); }
+    showFriends() { alert('FRIENDS - Lista'); }
 }
 
-const app = new App();
-app.init();
+// Iniciar cuando cargue la página
+window.onload = () => {
+    window.app = new App();
+    window.app.init();
+};
