@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IS TIME</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -17,20 +17,47 @@
         }
 
         :root {
-            --neon-green: #00ff41;
-            --neon-red: #ff3333;
-            --dark-bg: #000000;
-            --glass: rgba(0, 255, 65, 0.05);
+            --acid-green: #39ff14;
+            --hot-pink: #ff00ff;
+            --cyan: #00ffff;
+            --chrome: #c0c0c0;
+            --black: #000000;
+            --dark-gray: #0a0a0a;
         }
 
         html, body {
             font-family: 'Orbitron', monospace;
-            background: var(--dark-bg);
-            color: var(--neon-green);
+            background: var(--black);
+            color: var(--acid-green);
             height: 100%;
             width: 100%;
             overflow: hidden;
             position: fixed;
+        }
+
+        /* Background grid */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(57, 255, 20, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(57, 255, 20, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-grid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, #000 70%);
         }
 
         .screen {
@@ -41,97 +68,174 @@
             height: 100%;
             display: none;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            background: var(--dark-bg);
+            background: var(--dark-gray);
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+            overflow-y: auto;
         }
 
         .screen.active {
             display: flex;
             opacity: 1;
-            z-index: 10;
         }
 
+        /* Glitch text effect */
+        .glitch {
+            position: relative;
+            animation: glitch-skew 3s infinite;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-anim-1 2s infinite;
+            color: var(--hot-pink);
+            z-index: -1;
+        }
+
+        .glitch::after {
+            animation: glitch-anim-2 2s infinite;
+            color: var(--cyan);
+            z-index: -2;
+        }
+
+        @keyframes glitch-anim-1 {
+            0%, 100% { clip-path: inset(0 0 95% 0); transform: translate(-2px, 0); }
+            20% { clip-path: inset(20% 0 60% 0); transform: translate(2px, 0); }
+            40% { clip-path: inset(40% 0 40% 0); transform: translate(-2px, 0); }
+            60% { clip-path: inset(60% 0 20% 0); transform: translate(2px, 0); }
+            80% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0%, 100% { clip-path: inset(95% 0 0 0); transform: translate(2px, 0); }
+            20% { clip-path: inset(60% 0 20% 0); transform: translate(-2px, 0); }
+            40% { clip-path: inset(40% 0 40% 0); transform: translate(2px, 0); }
+            60% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 0); }
+            80% { clip-path: inset(5% 0 80% 0); transform: translate(2px, 0); }
+        }
+
+        @keyframes glitch-skew {
+            0%, 100% { transform: skew(0deg); }
+            10% { transform: skew(-2deg); }
+            20% { transform: skew(2deg); }
+            30% { transform: skew(0deg); }
+        }
+
+        /* Chrome text */
+        .chrome-text {
+            background: linear-gradient(180deg, #fff 0%, #c0c0c0 50%, #808080 51%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(192, 192, 192, 0.5);
+        }
+
+        /* Logo styles */
         .logo-main {
-            font-size: 3.5rem;
-            font-weight: 300;
-            letter-spacing: 1rem;
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: 0.3rem;
             text-transform: uppercase;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 30px rgba(0, 255, 65, 0.4);
-            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 
+                0 0 10px var(--acid-green),
+                0 0 20px var(--acid-green),
+                0 0 40px var(--acid-green);
+            position: relative;
         }
 
         .logo-small {
-            font-size: 1.2rem;
-            font-weight: 300;
-            letter-spacing: 0.4rem;
-            opacity: 0.6;
-            margin-top: 2vh;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5rem;
+            margin-top: auto;
+            margin-bottom: 3vh;
+            opacity: 0.8;
+            text-shadow: 0 0 10px var(--acid-green);
         }
 
+        /* Timer */
         .timer-display {
-            font-size: 3.2rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 4rem;
             font-weight: 400;
-            letter-spacing: 0.15rem;
-            font-variant-numeric: tabular-nums;
-            text-shadow: 0 0 25px currentColor;
-            transition: all 0.3s ease;
+            letter-spacing: 0.1rem;
+            text-shadow: 
+                0 0 10px currentColor,
+                0 0 20px currentColor,
+                0 0 40px currentColor;
+            position: relative;
+            padding: 20px;
+            border: 2px solid;
+            border-image: linear-gradient(45deg, var(--acid-green), var(--cyan), var(--hot-pink)) 1;
+            background: rgba(0, 0, 0, 0.8);
         }
 
         .timer-display.danger {
-            color: var(--neon-red);
-            text-shadow: 0 0 30px rgba(255, 51, 51, 0.6);
-            animation: pulse-red 0.8s infinite;
+            color: var(--hot-pink);
+            border-image: linear-gradient(45deg, var(--hot-pink), #ff4444, #ff8800) 1;
+            animation: pulse-danger 0.5s infinite;
         }
 
         .timer-display.frozen {
             color: #444;
+            border-image: linear-gradient(45deg, #444, #666, #444) 1;
             text-shadow: none;
         }
 
-        @keyframes pulse-red {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        @keyframes pulse-danger {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
         }
 
+        /* Splash */
         .splash-timer {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 300;
-            letter-spacing: 0.4rem;
+            letter-spacing: 0.5rem;
             opacity: 0.7;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
+            color: var(--cyan);
+            text-shadow: 0 0 10px var(--cyan);
         }
 
         .hint-text {
-            position: absolute;
-            bottom: 12%;
-            font-size: 0.6rem;
-            letter-spacing: 0.2rem;
-            opacity: 0.35;
-            font-weight: 300;
-            animation: blink 2s infinite;
-            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.3rem;
+            opacity: 0.5;
+            margin-top: 5vh;
+            animation: blink 1.5s infinite;
+            color: var(--hot-pink);
         }
 
         @keyframes blink {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
         }
 
         .rule-line {
-            font-size: 0.85rem;
-            font-weight: 300;
-            letter-spacing: 0.12rem;
-            margin: 1rem 0;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.15rem;
+            margin: 1.5rem 0;
             opacity: 0;
-            transform: translateY(15px);
-            transition: all 0.7s ease;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
             text-align: center;
             max-width: 85%;
-            line-height: 1.5;
+            padding: 15px;
+            border-left: 3px solid var(--acid-green);
+            background: linear-gradient(90deg, rgba(57, 255, 20, 0.1), transparent);
         }
 
         .rule-line.show {
@@ -139,485 +243,515 @@
             transform: translateY(0);
         }
 
-        .input-field {
-            background: transparent;
-            border: 1px solid rgba(0, 255, 65, 0.25);
-            color: var(--neon-green);
+        /* Buttons - Y2K style */
+        .btn-y2k {
+            background: linear-gradient(135deg, rgba(57, 255, 20, 0.1), rgba(0, 255, 255, 0.05));
+            border: 2px solid var(--acid-green);
+            color: var(--acid-green);
             font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
-            font-weight: 300;
-            padding: 18px 25px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.2rem;
+            padding: 20px 40px;
+            margin: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            transition: all 0.3s;
+            box-shadow: 
+                0 0 10px rgba(57, 255, 20, 0.3),
+                inset 0 0 20px rgba(57, 255, 20, 0.1);
+        }
+
+        .btn-y2k::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .btn-y2k:hover::before,
+        .btn-y2k:active::before {
+            left: 100%;
+        }
+
+        .btn-y2k:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.6);
+        }
+
+        .btn-y2k:disabled {
+            opacity: 0.3;
+            border-color: #555;
+            color: #555;
+            box-shadow: none;
+        }
+
+        .btn-y2k.pink {
+            border-color: var(--hot-pink);
+            color: var(--hot-pink);
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+        }
+
+        .btn-y2k.cyan {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Input Y2K */
+        .input-y2k {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--acid-green);
+            color: var(--acid-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 500;
+            padding: 15px 10px;
             text-align: center;
-            letter-spacing: 0.15rem;
+            letter-spacing: 0.2rem;
             width: 80%;
-            max-width: 320px;
-            margin: 0.8rem 0;
+            max-width: 300px;
+            margin: 1rem 0;
             outline: none;
             text-transform: uppercase;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(57, 255, 20, 0.1);
         }
 
-        .input-field:focus {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 25px rgba(0, 255, 65, 0.15);
+        .input-y2k:focus {
+            border-bottom-color: var(--cyan);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
         }
 
-        .btn-primary {
-            background: transparent;
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 0.85rem;
-            font-weight: 400;
-            letter-spacing: 0.25rem;
-            padding: 20px 50px;
-            margin-top: 2.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-        }
-
-        .btn-primary:hover, .btn-primary:active {
-            background: rgba(0, 255, 65, 0.08);
-            box-shadow: 0 0 40px rgba(0, 255, 65, 0.25);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.25;
-            cursor: not-allowed;
-            border-color: #333;
-            color: #555;
-        }
-
-        .btn-audio {
-            position: absolute;
-            bottom: 8%;
-            background: transparent;
-            border: 1px solid rgba(0, 255, 65, 0.4);
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 0.7rem;
-            padding: 15px 30px;
-            cursor: pointer;
-            letter-spacing: 0.15rem;
-            opacity: 0.8;
-        }
-
+        /* Home layout */
         #home {
+            padding-top: 8vh;
             justify-content: flex-start;
-            padding-top: 10vh;
         }
 
         .top-bar {
             position: absolute;
-            top: 3vh;
-            width: 90%;
+            top: 2vh;
+            width: 92%;
             display: flex;
             justify-content: space-between;
-            font-size: 0.75rem;
-            font-weight: 300;
-            opacity: 0.6;
-            letter-spacing: 0.08rem;
+            align-items: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(57, 255, 20, 0.2);
+            clip-path: polygon(0 0, 100% 0, 98% 100%, 2% 100%);
         }
 
         .user-name-display {
-            font-weight: 500;
-            color: var(--neon-green);
-        }
-
-        .audio-toggle {
-            cursor: pointer;
-            padding: 5px 10px;
-            border: 1px solid rgba(0, 255, 65, 0.3);
+            font-weight: 700;
             font-size: 0.9rem;
+            letter-spacing: 0.1rem;
+            color: var(--cyan);
+            text-shadow: 0 0 10px var(--cyan);
         }
 
+        /* Audio icon SVG */
+        .audio-icon {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .audio-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: var(--acid-green);
+            stroke-width: 2;
+        }
+
+        .audio-icon.muted svg {
+            stroke: #555;
+        }
+
+        .audio-icon:not(.muted) .wave {
+            animation: sound-wave 1s infinite;
+        }
+
+        @keyframes sound-wave {
+            0%, 100% { transform: scaleY(0.5); }
+            50% { transform: scaleY(1); }
+        }
+
+        /* Heart */
         .heart-container {
-            margin: 2.5vh 0;
-            font-size: 1.8rem;
+            margin: 3vh 0;
+            font-size: 2.5rem;
+            color: var(--hot-pink);
+            text-shadow: 
+                0 0 10px var(--hot-pink),
+                0 0 20px var(--hot-pink),
+                0 0 40px var(--hot-pink);
             animation: heartbeat 1s infinite;
-            text-shadow: 0 0 15px rgba(255, 0, 64, 0.5);
         }
 
         .heart-container.fast {
             animation: heartbeat 0.5s infinite;
         }
 
-        .heart-container.slow {
-            animation: heartbeat 2s infinite;
-            opacity: 0.3;
-        }
-
         @keyframes heartbeat {
             0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.25); }
+            15% { transform: scale(1.3); }
             30% { transform: scale(1); }
             45% { transform: scale(1.15); }
         }
 
+        /* Menu grid - asymmetric Y2K */
         .menu-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            width: 85%;
-            max-width: 340px;
+            gap: 15px;
+            width: 90%;
+            max-width: 400px;
             margin-top: 5vh;
         }
 
         .menu-btn {
-            background: var(--glass);
-            border: 1px solid rgba(0, 255, 65, 0.2);
-            color: var(--neon-green);
+            background: linear-gradient(135deg, rgba(57, 255, 20, 0.05), transparent);
+            border: 1px solid rgba(57, 255, 20, 0.4);
+            color: var(--acid-green);
             font-family: 'Orbitron', monospace;
-            font-size: 0.7rem;
-            font-weight: 400;
+            font-size: 0.75rem;
+            font-weight: 700;
             letter-spacing: 0.1rem;
-            padding: 28px 15px;
+            padding: 35px 15px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.25s ease;
             text-transform: uppercase;
-            line-height: 1.5;
+            position: relative;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+            transition: all 0.3s;
+        }
+
+        .menu-btn:nth-child(2) {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.05), transparent);
+            border-color: rgba(255, 0, 255, 0.4);
+            color: var(--hot-pink);
+        }
+
+        .menu-btn:nth-child(3) {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05), transparent);
+            border-color: rgba(0, 255, 255, 0.4);
+            color: var(--cyan);
+        }
+
+        .menu-btn:nth-child(4) {
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.05), transparent);
+            border-color: rgba(192, 192, 192, 0.4);
+            color: var(--chrome);
         }
 
         .menu-btn:active {
-            background: rgba(0, 255, 65, 0.12);
-            transform: scale(0.96);
+            transform: scale(0.95) skew(-2deg);
+            box-shadow: 0 0 30px currentColor;
         }
 
-        .menu-btn:disabled {
-            opacity: 0.15;
-            cursor: not-allowed;
-        }
-
-        .screen-header {
-            position: absolute;
-            top: 3vh;
-            font-size: 1rem;
-            font-weight: 300;
-            letter-spacing: 0.4rem;
-            text-transform: uppercase;
-        }
-
-        .back-btn {
-            position: absolute;
-            top: 3vh;
-            left: 5%;
-            font-size: 0.75rem;
-            cursor: pointer;
-            opacity: 0.5;
-            font-weight: 300;
-        }
-
-        /* Make Friend - Organizado */
+        /* Make Friend - compact Y2K */
         #makeFriend {
+            padding-top: 6vh;
             justify-content: flex-start;
-            padding-top: 8vh;
         }
 
-        .friend-section {
-            width: 90%;
-            max-width: 360px;
-            margin: 3vh 0;
-            text-align: center;
+        .section-y2k {
+            width: 92%;
+            margin: 2vh 0;
+            padding: 20px;
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            background: linear-gradient(180deg, rgba(57, 255, 20, 0.05), transparent);
+            position: relative;
+        }
+
+        .section-y2k::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--acid-green), transparent);
         }
 
         .section-label {
             font-size: 0.7rem;
-            letter-spacing: 0.2rem;
-            opacity: 0.5;
-            margin-bottom: 1.5vh;
+            letter-spacing: 0.3rem;
+            color: var(--cyan);
+            margin-bottom: 15px;
             text-transform: uppercase;
-        }
-
-        .separator {
-            width: 60%;
-            height: 1px;
-            background: rgba(0, 255, 65, 0.15);
-            margin: 3vh auto;
         }
 
         .qr-box {
             background: white;
-            padding: 12px;
+            padding: 8px;
             display: inline-block;
-            border-radius: 8px;
-            margin: 1vh 0;
+            margin: 10px 0;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
         }
 
         .code-text {
-            font-size: 1.3rem;
-            font-weight: 700;
-            letter-spacing: 0.3rem;
-            margin-top: 1vh;
-            color: var(--neon-green);
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 0.4rem;
+            color: var(--acid-green);
+            text-shadow: 0 0 10px var(--acid-green);
+            margin-top: 10px;
         }
 
         .scanner-btn {
-            background: rgba(0, 255, 65, 0.08);
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 0.8rem;
-            padding: 20px 40px;
-            cursor: pointer;
-            letter-spacing: 0.15rem;
-            margin: 1vh 0;
-        }
-
-        .scanner-container {
-            width: 260px;
-            height: 260px;
-            margin: 2vh auto;
-            border: 2px solid var(--neon-green);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .scanner-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, transparent 40%, rgba(0,255,65,0.1) 50%, transparent 60%);
-            animation: scan 2s infinite;
-            pointer-events: none;
-        }
-
-        @keyframes scan {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
+            padding: 15px;
+            font-size: 0.8rem;
         }
 
         .manual-row {
             display: flex;
             gap: 10px;
-            justify-content: center;
             align-items: center;
-            margin-top: 1vh;
         }
 
         .manual-input {
-            width: 180px;
+            flex: 1;
             margin: 0;
+            font-size: 1rem;
         }
 
         .manual-btn {
-            padding: 18px 25px;
+            padding: 15px 25px;
             margin: 0;
             font-size: 0.7rem;
         }
 
-        .add-msg {
-            font-size: 0.75rem;
-            margin-top: 2vh;
-            height: 1.5rem;
-        }
-
-        /* Friends List */
-        .friends-list-container {
-            width: 88%;
-            max-width: 360px;
-            max-height: 65vh;
-            overflow-y: auto;
-            margin-top: 12vh;
-        }
-
-        .friend-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 15px;
-            border-bottom: 1px solid rgba(0, 255, 65, 0.08);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .friend-item:active {
-            background: rgba(0, 255, 65, 0.05);
-        }
-
-        .friend-name {
-            font-size: 0.9rem;
-            font-weight: 400;
-            letter-spacing: 0.05rem;
-        }
-
-        .friend-time {
-            font-size: 0.8rem;
-            font-weight: 400;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .friend-time.danger {
-            color: var(--neon-red);
-        }
-
-        /* Action Screens */
-        .action-section {
-            margin-top: 15vh;
-            text-align: center;
-            width: 85%;
-        }
-
-        .action-info {
-            font-size: 0.75rem;
-            opacity: 0.6;
-            margin-bottom: 3vh;
-            line-height: 1.6;
-        }
-
-        /* Selector Futurista Custom */
-        .custom-select-container {
-            position: relative;
-            width: 100%;
-            margin-bottom: 3vh;
-        }
-
-        .custom-select-trigger {
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px solid rgba(0, 255, 65, 0.3);
-            padding: 18px 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            letter-spacing: 0.05rem;
-        }
-
-        .custom-select-trigger::after {
-            content: '▼';
-            font-size: 0.6rem;
-            opacity: 0.6;
-        }
-
-        .custom-options {
-            position: absolute;
-            top: 100%;
+        /* Scanner modal */
+        .scanner-modal {
+            position: fixed;
+            top: 0;
             left: 0;
             width: 100%;
-            background: #000;
-            border: 1px solid rgba(0, 255, 65, 0.3);
-            border-top: none;
-            max-height: 250px;
-            overflow-y: auto;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
             display: none;
-            z-index: 100;
-        }
-
-        .custom-options.open {
-            display: block;
-        }
-
-        .custom-option {
-            padding: 15px 20px;
-            cursor: pointer;
-            border-bottom: 1px solid rgba(0, 255, 65, 0.1);
-            transition: all 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .custom-option:hover, .custom-option.selected {
-            background: rgba(0, 255, 65, 0.1);
-            box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.1);
-        }
-
-        .option-name {
-            font-size: 0.9rem;
-            font-weight: 400;
-        }
-
-        .option-time {
-            font-size: 0.75rem;
-            opacity: 0.7;
-        }
-
-        .no-friends-msg {
-            padding: 30px;
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0.6;
-        }
-
-        .no-friends-btn {
-            margin-top: 15px;
-            padding: 12px 25px;
-            font-size: 0.7rem;
-        }
-
-        /* Tokes */
-        .tokes-grid {
-            width: 85%;
-            max-width: 360px;
-            margin-top: 3vh;
-            display: flex;
             flex-direction: column;
-            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .toke-btn {
-            background: rgba(0, 255, 65, 0.03);
-            border: 1px solid rgba(0, 255, 65, 0.2);
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 0.75rem;
-            font-weight: 300;
-            padding: 20px 15px;
-            text-align: left;
+        .scanner-modal.active {
+            display: flex;
+        }
+
+        .scanner-frame {
+            width: 280px;
+            height: 280px;
+            border: 3px solid var(--acid-green);
+            position: relative;
+            box-shadow: 
+                0 0 20px var(--acid-green),
+                inset 0 0 20px rgba(57, 255, 20, 0.2);
+        }
+
+        .scanner-frame::before,
+        .scanner-frame::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--hot-pink);
+        }
+
+        .scanner-frame::before {
+            top: -3px;
+            left: -3px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .scanner-frame::after {
+            bottom: -3px;
+            right: -3px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .scanner-laser {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--hot-pink);
+            box-shadow: 0 0 10px var(--hot-pink);
+            animation: laser-scan 2s infinite;
+        }
+
+        @keyframes laser-scan {
+            0%, 100% { top: 0; opacity: 1; }
+            50% { top: 100%; opacity: 1; }
+            51% { opacity: 0; }
+            99% { opacity: 0; }
+        }
+
+        /* Friends horizontal scroll */
+        .friends-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 20px 10px;
+            width: 100%;
+            scrollbar-width: none;
+        }
+
+        .friends-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .friend-card {
+            flex-shrink: 0;
+            width: 100px;
+            text-align: center;
             cursor: pointer;
             transition: all 0.3s;
+        }
+
+        .friend-card.selected {
+            transform: scale(1.1);
+        }
+
+        .friend-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0 auto 10px;
             position: relative;
-            line-height: 1.4;
         }
 
-        .toke-btn:active {
-            background: rgba(0, 255, 65, 0.12);
+        .friend-card.selected .friend-avatar {
+            box-shadow: 0 0 30px currentColor;
+            animation: avatar-pulse 1s infinite;
         }
 
-        .toke-btn.used {
+        @keyframes avatar-pulse {
+            0%, 100% { box-shadow: 0 0 20px currentColor; }
+            50% { box-shadow: 0 0 40px currentColor; }
+        }
+
+        .friend-name-card {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05rem;
+            margin-bottom: 5px;
+        }
+
+        .friend-time-card {
+            font-size: 0.6rem;
+            opacity: 0.8;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* Tokes grid */
+        .tokes-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 90%;
+            margin-top: 3vh;
+        }
+
+        .toke-card {
+            aspect-ratio: 1;
+            border: 2px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+            padding: 15px;
+        }
+
+        .toke-card:nth-child(1) { border-color: var(--acid-green); color: var(--acid-green); }
+        .toke-card:nth-child(2) { border-color: var(--hot-pink); color: var(--hot-pink); }
+        .toke-card:nth-child(3) { border-color: var(--cyan); color: var(--cyan); }
+        .toke-card:nth-child(4) { border-color: #ff8800; color: #ff8800; }
+        .toke-card:nth-child(5) { border-color: var(--chrome); color: var(--chrome); grid-column: span 2; }
+
+        .toke-card:active {
+            transform: scale(0.95);
+        }
+
+        .toke-card.used {
             opacity: 0.2;
-            border-color: #333;
             pointer-events: none;
         }
 
-        .toke-btn.selected {
-            border-color: var(--neon-green);
-            background: rgba(0, 255, 65, 0.15);
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+        .toke-card.selected {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px currentColor;
         }
 
-        .toke-reward {
+        .toke-emoji {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .toke-text {
+            font-size: 0.65rem;
+            text-align: center;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .toke-reward-badge {
             position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.7rem;
-            color: var(--neon-green);
-            font-weight: 500;
+            top: 5px;
+            right: 5px;
+            background: var(--acid-green);
+            color: #000;
+            font-size: 0.6rem;
+            padding: 3px 8px;
+            font-weight: 900;
         }
 
         /* Frozen */
         .frozen-screen {
-            color: #555;
-        }
-
-        .frozen-timer {
-            font-size: 2.2rem;
-            margin: 2rem 0;
-            letter-spacing: 0.2rem;
             color: #444;
         }
 
-        .resurrect-info {
-            font-size: 0.8rem;
-            max-width: 80%;
-            text-align: center;
-            line-height: 1.6;
-            margin-top: 2rem;
-            opacity: 0.6;
+        .frozen-glitch {
+            font-size: 3rem;
+            color: #444;
+            text-shadow: 
+                2px 0 #ff0000,
+                -2px 0 #00ffff;
+            animation: frozen-glitch 0.3s infinite;
+        }
+
+        @keyframes frozen-glitch {
+            0%, 100% { text-shadow: 2px 0 #ff0000, -2px 0 #00ffff; }
+            25% { text-shadow: -2px 0 #ff0000, 2px 0 #00ffff; }
+            50% { text-shadow: 2px 2px #ff0000, -2px -2px #00ffff; }
+            75% { text-shadow: -2px 2px #ff0000, 2px -2px #00ffff; }
         }
 
         /* Popup */
@@ -631,7 +765,7 @@
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 2000;
             opacity: 0;
             transition: opacity 0.3s;
         }
@@ -642,84 +776,87 @@
         }
 
         .popup-content {
-            border: 1px solid var(--neon-green);
-            background: #000;
+            border: 2px solid var(--acid-green);
+            background: linear-gradient(180deg, #0a0a0a, #000);
             padding: 40px 30px;
             text-align: center;
             max-width: 85%;
-            animation: popupIn 0.3s ease;
+            position: relative;
+            box-shadow: 
+                0 0 30px rgba(57, 255, 20, 0.3),
+                inset 0 0 30px rgba(57, 255, 20, 0.05);
         }
 
-        @keyframes popupIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .popup-content::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--acid-green), var(--hot-pink), var(--cyan));
+            z-index: -1;
+            opacity: 0.3;
         }
 
         .popup-title {
-            font-size: 1.1rem;
-            font-weight: 400;
+            font-size: 1.2rem;
+            font-weight: 900;
             margin-bottom: 1.5rem;
-            letter-spacing: 0.1rem;
+            letter-spacing: 0.2rem;
+            color: var(--cyan);
+            text-shadow: 0 0 10px var(--cyan);
         }
 
         .popup-message {
             font-size: 0.85rem;
-            font-weight: 300;
-            line-height: 1.5;
+            line-height: 1.6;
             margin-bottom: 2rem;
-            opacity: 0.9;
         }
 
         .popup-time {
-            font-size: 1.8rem;
-            color: var(--neon-green);
+            font-size: 2rem;
+            color: var(--acid-green);
             margin: 1rem 0;
-            text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+            text-shadow: 0 0 20px var(--acid-green);
+            font-family: 'Share Tech Mono', monospace;
         }
 
         .popup-btn {
             background: transparent;
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
+            border: 2px solid var(--acid-green);
+            color: var(--acid-green);
             font-family: 'Orbitron', monospace;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             padding: 15px 40px;
             cursor: pointer;
-            letter-spacing: 0.15rem;
+            letter-spacing: 0.2rem;
+            font-weight: 700;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
         }
 
         .inbox-badge {
             position: absolute;
             top: -5px;
             right: -5px;
-            background: var(--neon-red);
+            background: var(--hot-pink);
             color: #000;
             font-size: 0.6rem;
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
+            font-weight: 900;
+            box-shadow: 0 0 10px var(--hot-pink);
         }
 
         .hidden { display: none !important; }
-
-        ::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #000;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0, 255, 65, 0.3);
-        }
     </style>
 </head>
 <body>
+    <div class="bg-grid"></div>
 
     <!-- Popup -->
     <div class="popup-overlay" id="popup">
@@ -731,49 +868,78 @@
         </div>
     </div>
 
+    <!-- Scanner Modal -->
+    <div class="scanner-modal" id="scannerModal">
+        <div class="scanner-frame">
+            <div class="scanner-laser"></div>
+            <div id="qrReader" style="width: 100%; height: 100%;"></div>
+        </div>
+        <button class="btn-y2k pink" style="margin-top: 30px;" onclick="closeScanner()">CANCELAR</button>
+    </div>
+
     <!-- 1. SPLASH 1 -->
     <div id="splash1" class="screen active">
-        <div class="logo-main">IS TIME</div>
+        <div class="logo-main glitch" data-text="IS TIME">IS TIME</div>
         <div class="splash-timer" id="globalCountdown">24:00:00</div>
-        <div class="hint-text">TOCAR PARA CONTINUAR</div>
+        <div class="hint-text">>> PULSA PARA CONTINUAR >></div>
     </div>
 
     <!-- 2. SPLASH 2 -->
     <div id="splash2" class="screen">
-        <div class="rule-line" id="rule1">TU TIEMPO DEFINE TU EXISTENCIA</div>
-        <div class="rule-line" id="rule2">GANA TIEMPO CON PERSONAS REALES</div>
-        <div class="rule-line" id="rule3">CUANDO LLEGAS A CERO, DESAPARECES</div>
-        <button class="btn-audio" id="btnAudio" onclick="activateAudio()">ACTIVAR SONIDO 🔇</button>
+        <div class="rule-line" id="rule1">◢ TU TIEMPO DEFINE TU EXISTENCIA ◣</div>
+        <div class="rule-line" id="rule2">◢ GANA TIEMPO CON PERSONAS REALES ◣</div>
+        <div class="rule-line" id="rule3">◢ CUANDO LLEGAS A CERO, DESAPARECES ◣</div>
+        <button class="btn-y2k cyan" style="margin-top: 5vh;" onclick="activateAudio()">
+            ACTIVAR SONIDO [RECOMMENDED]
+        </button>
     </div>
 
     <!-- 3. REGISTRO -->
     <div id="register" class="screen">
-        <div class="logo-main" style="font-size: 2rem; margin-bottom: 3rem;">IDENTIDAD</div>
-        <input type="text" class="input-field" id="usernameInput" placeholder="TU NOMBRE" maxlength="12">
-        <div class="code-text" id="idPreview" style="font-size: 1rem; opacity: 0.5;">ID: ----</div>
-        <button class="btn-primary" id="startBtn" disabled>INICIAR</button>
+        <div class="logo-main" style="font-size: 2.5rem; margin-bottom: 4rem;">IDENTIDAD</div>
+        <input type="text" class="input-y2k" id="usernameInput" placeholder="INGRESA TU NOMBRE" maxlength="12">
+        <div style="font-size: 0.8rem; color: var(--cyan); margin-top: 1rem; letter-spacing: 0.2rem;">
+            ID: <span id="idPreview">----</span>
+        </div>
+        <button class="btn-y2k" id="startBtn" disabled style="margin-top: 4rem;">>> INICIAR >></button>
     </div>
 
     <!-- 4. HOME -->
     <div id="home" class="screen">
         <div class="top-bar">
             <span class="user-name-display" id="userNameDisplay">----</span>
-            <span class="audio-toggle" id="audioToggle" onclick="toggleAudio()">🔇</span>
+            <div class="audio-icon muted" id="audioIcon" onclick="toggleAudio()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                    <path class="wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                    <path class="wave" d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    <line x1="1" y1="1" x2="23" y2="23" class="mute-line" style="display: none;"/>
+                </svg>
+            </div>
         </div>
         
         <div class="timer-display" id="mainTimer">72:00:00</div>
-        <div style="font-size: 0.8rem; opacity: 0.5; margin-top: 1vh; letter-spacing: 0.1rem;" id="friendsCount">0 ALIADOS</div>
         
         <div class="heart-container" id="heartBeat">♥</div>
         
         <div class="menu-grid">
-            <button class="menu-btn" id="btnMakeFriend">MAKE<br>FRIEND</button>
-            <button class="menu-btn" id="btnFriends">ALIADOS<br>LIST</button>
-            <button class="menu-btn" id="btnSendTime" style="position: relative;">
+            <button class="menu-btn" onclick="showScreen('makeFriend')">
+                <div style="font-size: 1.5rem; margin-bottom: 5px;">+</div>
+                MAKE<br>FRIEND
+            </button>
+            <button class="menu-btn" onclick="showScreen('friendsList')">
+                <div style="font-size: 1.5rem; margin-bottom: 5px;">👥</div>
+                ALIADOS<br>LIST
+            </button>
+            <button class="menu-btn" onclick="showScreen('sendTime')" style="position: relative;">
+                <div style="font-size: 1.5rem; margin-bottom: 5px;">♥</div>
                 SEND<br>TIME
                 <span class="inbox-badge hidden" id="inboxBadge">0</span>
             </button>
-            <button class="menu-btn" id="btnPlay">PLAY<br>TOKES</button>
+            <button class="menu-btn" onclick="showScreen('playTokes')">
+                <div style="font-size: 1.5rem; margin-bottom: 5px;">⚡</div>
+                PLAY<br>TOKES
+            </button>
         </div>
 
         <div class="logo-small">IS TIME</div>
@@ -781,106 +947,119 @@
 
     <!-- 5. MAKE FRIEND -->
     <div id="makeFriend" class="screen">
-        <div class="back-btn" onclick="showScreen('home')">← VOLVER</div>
-        <div class="screen-header">CONEXIÓN</div>
-        
-        <!-- Sección 1: Tu Código -->
-        <div class="friend-section">
-            <div class="section-label">Tu Código - Escanea para Conectar</div>
-            <div class="qr-box" id="qrContainer"></div>
-            <div class="code-text" id="myCode">------</div>
+        <div class="back-btn" style="position: absolute; top: 2vh; left: 5%; font-size: 1rem; cursor: pointer;" onclick="showScreen('home')">
+            << VOLVER
         </div>
-
-        <div class="separator"></div>
-
-        <!-- Sección 2: Escanear -->
-        <div class="friend-section">
-            <div class="section-label">Escanear Aliado</div>
-            <button class="scanner-btn" onclick="toggleScanner()" id="scannerBtn">ABRIR CÁMARA</button>
-            <div class="scanner-container hidden" id="scannerWrapper">
-                <div class="scanner-overlay"></div>
-                <div id="qrReader" style="width: 100%; height: 100%;"></div>
+        <div style="margin-top: 8vh; width: 100%; display: flex; flex-direction: column; align-items: center;">
+            
+            <!-- Tu Código -->
+            <div class="section-y2k" style="text-align: center;">
+                <div class="section-label">◢ TU CÓDIGO ◣</div>
+                <div class="qr-box" id="qrContainer" style="width: 120px; height: 120px;"></div>
+                <div class="code-text" id="myCode" style="font-size: 1.2rem; margin-top: 15px;">------</div>
             </div>
-        </div>
 
-        <div class="separator"></div>
-
-        <!-- Sección 3: Manual -->
-        <div class="friend-section">
-            <div class="section-label">Código Manual</div>
-            <div class="manual-row">
-                <input type="text" class="input-field manual-input" id="friendCodeInput" placeholder="ABC123" maxlength="6">
-                <button class="btn-primary manual-btn" onclick="addFriendManual()">OK</button>
+            <!-- Escanear -->
+            <div class="section-y2k">
+                <div class="section-label">◢ ESCANEAR ALIADO ◣</div>
+                <button class="btn-y2k cyan scanner-btn" onclick="openScanner()">
+                    [ ABRIR CÁMARA ]
+                </button>
             </div>
-            <div class="add-msg" id="addFriendMsg"></div>
+
+            <!-- Manual -->
+            <div class="section-y2k">
+                <div class="section-label">◢ CÓDIGO MANUAL ◣</div>
+                <div class="manual-row">
+                    <input type="text" class="input-y2k manual-input" id="friendCodeInput" placeholder="ABC123" maxlength="6">
+                    <button class="btn-y2k manual-btn" onclick="addFriendManual()">>></button>
+                </div>
+                <div id="addFriendMsg" style="font-size: 0.8rem; margin-top: 15px; height: 1.5rem; text-align: center;"></div>
+            </div>
+
         </div>
     </div>
 
     <!-- 6. FRIENDS LIST -->
     <div id="friendsList" class="screen">
-        <div class="back-btn" onclick="showScreen('home')">← VOLVER</div>
-        <div class="screen-header">ALIADOS</div>
-        <div class="friends-list-container" id="friendsListContainer"></div>
+        <div class="back-btn" style="position: absolute; top: 2vh; left: 5%; font-size: 1rem; cursor: pointer;" onclick="showScreen('home')">
+            << VOLVER
+        </div>
+        <div style="margin-top: 10vh; width: 92%;">
+            <div style="text-align: center; font-size: 1.2rem; letter-spacing: 0.3rem; margin-bottom: 3vh; color: var(--cyan);">
+                ◢ ALIADOS ◣
+            </div>
+            <div class="friends-scroll" id="friendsListContainer"></div>
+        </div>
     </div>
 
     <!-- 7. SEND TIME -->
     <div id="sendTime" class="screen">
-        <div class="back-btn" onclick="showScreen('home')">← VOLVER</div>
-        <div class="screen-header">REGALO</div>
+        <div class="back-btn" style="position: absolute; top: 2vh; left: 5%; font-size: 1rem; cursor: pointer;" onclick="showScreen('home')">
+            << VOLVER
+        </div>
         
-        <div class="action-section">
-            <div class="action-info">
-                1 REGALO/DÍA → +1:00:00 ALIADO<br>
-                <span id="giftStatus" style="color: var(--neon-green);">DISPONIBLE</span>
-            </div>
-            
-            <div class="custom-select-container" id="giftSelectContainer">
-                <div class="custom-select-trigger" onclick="toggleGiftSelect()">
-                    <span id="giftTriggerText">SELECCIONAR ALIADO</span>
+        <div style="margin-top: 10vh; width: 92%;">
+            <div style="text-align: center; margin-bottom: 3vh;">
+                <div style="font-size: 1.2rem; letter-spacing: 0.3rem; color: var(--hot-pink); margin-bottom: 1rem;">
+                    ◢ REGALO ◣
                 </div>
-                <div class="custom-options" id="giftOptions"></div>
+                <div style="font-size: 0.8rem; opacity: 0.8;">
+                    1 REGALO/DÍA → <span style="color: var(--acid-green);">+1:00:00</span><br>
+                    <span id="giftStatus" style="color: var(--acid-green); font-weight: 700;">DISPONIBLE</span>
+                </div>
             </div>
-            
-            <button class="btn-primary" id="sendGiftBtn" onclick="sendGift()" disabled>ENVIAR TIEMPO</button>
+
+            <div class="section-y2k">
+                <div class="section-label">SELECCIONA ALIADO:</div>
+                <div class="friends-scroll" id="giftFriendsList"></div>
+            </div>
+
+            <button class="btn-y2k pink" id="sendGiftBtn" onclick="sendGift()" disabled style="margin-top: 3vh; width: 80%;">
+                [ ENVIAR TIEMPO ]
+            </button>
         </div>
     </div>
 
     <!-- 8. PLAY TOKES -->
     <div id="playTokes" class="screen">
-        <div class="back-btn" onclick="showScreen('home')">← VOLVER</div>
-        <div class="screen-header">TOKES</div>
-        
-        <div class="action-section" style="margin-top: 10vh;">
-            <div class="action-info" style="font-size: 0.7rem;">
-                5 TOKES/DÍA A 5 ALIADOS DISTINTOS<br>
-                USA LOS 5 → +6:00:00 BONUS<br>
-                <span id="tokesLeft" style="color: var(--neon-green);">5 restantes</span>
-            </div>
-            
-            <div class="custom-select-container" id="tokeSelectContainer" style="margin-bottom: 2vh;">
-                <div class="custom-select-trigger" onclick="toggleTokeSelect()">
-                    <span id="tokeTriggerText">SELECCIONAR ALIADO</span>
-                </div>
-                <div class="custom-options" id="tokeOptions"></div>
-            </div>
+        <div class="back-btn" style="position: absolute; top: 2vh; left: 5%; font-size: 1rem; cursor: pointer;" onclick="showScreen('home')">
+            << VOLVER
         </div>
+        
+        <div style="margin-top: 8vh; width: 92%;">
+            <div style="text-align: center; margin-bottom: 2vh;">
+                <div style="font-size: 1.2rem; letter-spacing: 0.3rem; color: #ff8800; margin-bottom: 0.5rem;">
+                    ◢ TOKES ◣
+                </div>
+                <div style="font-size: 0.75rem;">
+                    5 TOKES/DÍA | USA 5 = <span style="color: var(--acid-green);">+6:00:00 BONUS</span><br>
+                    <span id="tokesLeft" style="color: var(--cyan); font-weight: 700;">5 RESTANTES</span>
+                </div>
+            </div>
 
-        <div class="tokes-grid" id="tokesContainer"></div>
+            <div class="section-y2k" style="margin-bottom: 2vh;">
+                <div class="section-label">ALIADO:</div>
+                <div class="friends-scroll" id="tokeFriendsList"></div>
+            </div>
+
+            <div class="tokes-container" id="tokesContainer"></div>
+        </div>
     </div>
 
     <!-- 9. CONGELADO -->
     <div id="frozen" class="screen frozen-screen">
-        <div class="logo-main" style="font-size: 2.5rem; color: #444; text-shadow: none; margin-bottom: 1rem;">CONGELADO</div>
-        <div class="frozen-timer" id="resurrectTimer">48:00:00</div>
-        <div style="font-size: 3rem; opacity: 0.15;">✕</div>
-        <div class="resurrect-info" id="frozenInfo">
+        <div class="frozen-glitch" style="margin-top: 15vh; font-size: 3.5rem;">CONGELADO</div>
+        <div style="font-size: 2.5rem; margin: 2rem 0; font-family: 'Share Tech Mono';" id="resurrectTimer">48:00:00</div>
+        <div style="font-size: 4rem; opacity: 0.2; text-shadow: 0 0 30px;">✕</div>
+        <div style="font-size: 0.9rem; max-width: 85%; text-align: center; line-height: 1.8; margin-top: 3rem; opacity: 0.7;" id="frozenInfo">
             DÍA 1: Perderás 2 aliados<br>
             Espera 48h para resucitar con 12:00:00
         </div>
     </div>
 
     <script>
-        // ==================== ESTADO ====================
+        // Estado
         const state = {
             user: null,
             friends: [],
@@ -898,25 +1077,25 @@
                 dayCount: 0
             },
             inbox: { gifts: [], tokes: [] },
-            audioEnabled: false
+            audioEnabled: false,
+            selectedGiftFriend: null,
+            selectedTokeFriend: null
         };
 
         const REWARDS = [24, 24, 12, 6, 0];
         const TOKE_MESSAGES = [
-            { text: "¡Pásame un poco de vida, colega!", type: "life", reward: 2, emoji: "😎⏳😂🔥" },
-            { text: "Me acuerdo de ti", type: "social", reward: 0, emoji: "😎⏳😂🔥" },
-            { text: "¿Qué pasa, máquina?", type: "social", reward: 0, emoji: "😎⏳😂🔥" },
-            { text: "Vamos a liarla", type: "social", reward: 0, emoji: "😎⏳😂🔥" },
-            { text: "No me falles hoy", type: "social", reward: 0, emoji: "😎⏳😂🔥" }
+            { text: "¡Pásame un poco de vida, colega!", type: "life", reward: 2, emoji: "⚡" },
+            { text: "Me acuerdo de ti", type: "social", reward: 0, emoji: "💭" },
+            { text: "¿Qué pasa, máquina?", type: "social", reward: 0, emoji: "🤖" },
+            { text: "Vamos a liarla", type: "social", reward: 0, emoji: "🔥" },
+            { text: "No me falles hoy", type: "social", reward: 0, emoji: "⚠️" }
         ];
 
         let html5QrCode = null;
         let audioContext = null;
         let heartbeatInterval = null;
-        let selectedGiftFriend = null;
-        let selectedTokeFriend = null;
 
-        // ==================== AUDIO ====================
+        // Audio
         function initAudio() {
             if (audioContext) return;
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -924,31 +1103,26 @@
 
         function activateAudio() {
             initAudio();
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
+            if (audioContext.state === 'suspended') audioContext.resume();
             state.audioEnabled = true;
-            document.getElementById('btnAudio').textContent = 'SONIDO ACTIVADO 🔊';
-            document.getElementById('btnAudio').style.borderColor = 'var(--neon-green)';
-            
-            setTimeout(() => {
-                showScreen('register');
-            }, 500);
+            document.querySelector('.btn-y2k.cyan').textContent = '[ SONIDO ACTIVADO ]';
+            document.querySelector('.btn-y2k.cyan').style.borderColor = 'var(--acid-green)';
+            document.querySelector('.btn-y2k.cyan').style.color = 'var(--acid-green)';
+            setTimeout(() => showScreen('register'), 500);
         }
 
         function toggleAudio() {
-            if (!audioContext) {
-                initAudio();
-                audioContext.resume();
-            }
+            if (!audioContext) { initAudio(); audioContext.resume(); }
             state.audioEnabled = !state.audioEnabled;
             updateAudioIcon();
             updateHeartbeat();
         }
 
         function updateAudioIcon() {
-            const icon = document.getElementById('audioToggle');
-            icon.textContent = state.audioEnabled ? '🔊' : '🔇';
+            const icon = document.getElementById('audioIcon');
+            icon.classList.toggle('muted', !state.audioEnabled);
+            const line = icon.querySelector('.mute-line');
+            if (line) line.style.display = state.audioEnabled ? 'none' : 'block';
         }
 
         function playHeartbeat() {
@@ -964,10 +1138,8 @@
             
             heartbeatInterval = setInterval(() => {
                 if (!state.audioEnabled || !audioContext) return;
-                
                 const now = audioContext.currentTime;
                 
-                // Lub
                 const osc1 = audioContext.createOscillator();
                 const gain1 = audioContext.createGain();
                 osc1.frequency.setValueAtTime(80, now);
@@ -979,26 +1151,23 @@
                 osc1.start(now);
                 osc1.stop(now + 0.1);
                 
-                // Dub
-                const osc2 = audioContext.createOscillator();
-                const gain2 = audioContext.createGain();
-                osc2.frequency.setValueAtTime(60, now + 0.12);
-                osc2.type = 'sine';
-                gain2.gain.setValueAtTime(0.25, now + 0.12);
-                gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-                osc2.connect(gain2);
-                gain2.connect(audioContext.destination);
-                osc2.start(now + 0.12);
-                osc2.stop(now + 0.2);
-                
+                setTimeout(() => {
+                    const osc2 = audioContext.createOscillator();
+                    const gain2 = audioContext.createGain();
+                    osc2.frequency.setValueAtTime(60, now + 0.12);
+                    osc2.type = 'sine';
+                    gain2.gain.setValueAtTime(0.25, now + 0.12);
+                    gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc2.connect(gain2);
+                    gain2.connect(audioContext.destination);
+                    osc2.start(now + 0.12);
+                    osc2.stop(now + 0.2);
+                }, 100);
             }, interval);
         }
 
         function stopHeartbeat() {
-            if (heartbeatInterval) {
-                clearInterval(heartbeatInterval);
-                heartbeatInterval = null;
-            }
+            if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }
         }
 
         function updateHeartbeat() {
@@ -1010,7 +1179,7 @@
             }
         }
 
-        // ==================== UTILIDADES ====================
+        // Utilidades
         function generateId() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
             let id = '';
@@ -1029,16 +1198,16 @@
         function formatShortTime(ms) {
             const h = Math.floor(ms / 3600000);
             const m = Math.floor((ms % 3600000) / 60000);
-            return `${h}h ${m}m`;
+            return `${h}h${m}m`;
         }
 
         function saveState() {
             state.lastUpdate = Date.now();
-            localStorage.setItem('istime_data', JSON.stringify(state));
+            localStorage.setItem('istime_data_v2', JSON.stringify(state));
         }
 
         function loadState() {
-            const saved = localStorage.getItem('istime_data');
+            const saved = localStorage.getItem('istime_data_v2');
             if (saved) {
                 Object.assign(state, JSON.parse(saved));
                 const now = Date.now();
@@ -1058,7 +1227,7 @@
             return false;
         }
 
-        // ==================== POPUP ====================
+        // Popup
         function showPopup(title, message, timeBonus = null) {
             document.getElementById('popupTitle').textContent = title;
             document.getElementById('popupMessage').innerHTML = message;
@@ -1077,11 +1246,11 @@
             document.getElementById('popup').classList.remove('active');
         }
 
-        // ==================== NAVEGACIÓN ====================
+        // Navegación
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => {
                 s.classList.remove('active');
-                setTimeout(() => { if (!s.classList.contains('active')) s.style.display = 'none'; }, 500);
+                setTimeout(() => { if (!s.classList.contains('active')) s.style.display = 'none'; }, 300);
             });
             
             const target = document.getElementById(screenId);
@@ -1098,7 +1267,7 @@
             if (screenId === 'frozen') updateFrozen();
         }
 
-        // ==================== SPLASH ====================
+        // Splash
         let globalCountdown = 24 * 3600;
         setInterval(() => {
             globalCountdown--;
@@ -1115,19 +1284,19 @@
                 showScreen('splash2');
                 setTimeout(() => {
                     document.getElementById('rule1').classList.add('show');
-                    setTimeout(() => document.getElementById('rule2').classList.add('show'), 800);
-                    setTimeout(() => document.getElementById('rule3').classList.add('show'), 1600);
+                    setTimeout(() => document.getElementById('rule2').classList.add('show'), 600);
+                    setTimeout(() => document.getElementById('rule3').classList.add('show'), 1200);
                 }, 100);
             }
         });
 
-        // ==================== REGISTRO ====================
+        // Registro
         const usernameInput = document.getElementById('usernameInput');
         usernameInput.addEventListener('input', (e) => {
             const val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
             e.target.value = val;
             document.getElementById('startBtn').disabled = val.length < 2;
-            document.getElementById('idPreview').textContent = `ID: ${generateId()}`;
+            document.getElementById('idPreview').textContent = generateId();
         });
 
         document.getElementById('startBtn').addEventListener('click', () => {
@@ -1143,7 +1312,7 @@
             showScreen('home');
         });
 
-        // ==================== HOME ====================
+        // Home
         function updateHome() {
             if (!state.user) return;
             
@@ -1151,17 +1320,15 @@
             const heartEl = document.getElementById('heartBeat');
             
             document.getElementById('userNameDisplay').textContent = state.user.name;
-            document.getElementById('friendsCount').textContent = `${state.friends.length} ALIADOS`;
             
             timerEl.textContent = formatTime(state.user.timeMs);
             
             const hours = state.user.timeMs / 3600000;
             timerEl.classList.remove('danger', 'frozen');
-            heartEl.classList.remove('fast', 'slow');
+            heartEl.classList.remove('fast');
             
             if (state.user.timeMs <= 0) {
                 timerEl.classList.add('frozen');
-                heartEl.classList.add('slow');
                 enterFrozenState();
                 return;
             } else if (hours < 12) {
@@ -1187,17 +1354,14 @@
                 
                 if (document.getElementById('home').classList.contains('active')) updateHome();
                 if (document.getElementById('friendsList').classList.contains('active')) renderFriendsList();
+                if (document.getElementById('sendTime').classList.contains('active')) updateSendTime();
+                if (document.getElementById('playTokes').classList.contains('active')) updatePlayTokes();
                 
                 saveState();
             }
         }, 1000);
 
-        document.getElementById('btnMakeFriend').addEventListener('click', () => showScreen('makeFriend'));
-        document.getElementById('btnFriends').addEventListener('click', () => showScreen('friendsList'));
-        document.getElementById('btnSendTime').addEventListener('click', () => { checkInbox(); showScreen('sendTime'); });
-        document.getElementById('btnPlay').addEventListener('click', () => showScreen('playTokes'));
-
-        // ==================== INBOX ====================
+        // Inbox
         function checkInbox() {
             let message = '';
             let totalTime = 0;
@@ -1225,7 +1389,7 @@
             }
         }
 
-        // ==================== MAKE FRIEND ====================
+        // Make Friend
         function updateMakeFriend() {
             if (!state.user) return;
             document.getElementById('myCode').textContent = state.user.id;
@@ -1234,39 +1398,23 @@
             container.innerHTML = '';
             new QRCode(container, {
                 text: state.user.id,
-                width: 160,
-                height: 160,
+                width: 104,
+                height: 104,
                 colorDark: '#000000',
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.H
             });
         }
 
-        function toggleScanner() {
-            const wrapper = document.getElementById('scannerWrapper');
-            const btn = document.getElementById('scannerBtn');
-            
-            if (wrapper.classList.contains('hidden')) {
-                wrapper.classList.remove('hidden');
-                btn.textContent = 'CERRAR CÁMARA';
-                startScanner();
-            } else {
-                wrapper.classList.add('hidden');
-                btn.textContent = 'ABRIR CÁMARA';
-                stopScanner();
-            }
-        }
-
-        function startScanner() {
+        function openScanner() {
+            document.getElementById('scannerModal').classList.add('active');
             if (!html5QrCode) html5QrCode = new Html5Qrcode('qrReader');
             
             html5QrCode.start(
                 { facingMode: 'environment' },
-                { fps: 10, qrbox: { width: 180, height: 180 } },
+                { fps: 10, qrbox: { width: 200, height: 200 } },
                 (decodedText) => {
-                    stopScanner();
-                    document.getElementById('scannerWrapper').classList.add('hidden');
-                    document.getElementById('scannerBtn').textContent = 'ABRIR CÁMARA';
+                    closeScanner();
                     addFriendByCode(decodedText);
                 },
                 () => {}
@@ -1275,10 +1423,9 @@
             });
         }
 
-        function stopScanner() {
-            if (html5QrCode) {
-                html5QrCode.stop().catch(() => {});
-            }
+        function closeScanner() {
+            document.getElementById('scannerModal').classList.remove('active');
+            if (html5QrCode) html5QrCode.stop().catch(() => {});
         }
 
         function addFriendManual() {
@@ -1289,18 +1436,18 @@
             const msgEl = document.getElementById('addFriendMsg');
             
             if (!code || code.length !== 6) {
-                msgEl.textContent = 'CÓDIGO INVÁLIDO (6 CARACTERES)';
-                msgEl.style.color = 'var(--neon-red)';
+                msgEl.textContent = '>> CÓDIGO INVÁLIDO <<';
+                msgEl.style.color = 'var(--hot-pink)';
                 return;
             }
             if (code === state.user.id) {
-                msgEl.textContent = 'NO PUEDES AÑADIRTE A TI MISMO';
-                msgEl.style.color = 'var(--neon-red)';
+                msgEl.textContent = '>> NO PUEDES AÑADIRTE <<';
+                msgEl.style.color = 'var(--hot-pink)';
                 return;
             }
             if (state.friends.find(f => f.id === code)) {
-                msgEl.textContent = 'YA ES TU ALIADO';
-                msgEl.style.color = 'var(--neon-red)';
+                msgEl.textContent = '>> YA ES ALIADO <<';
+                msgEl.style.color = 'var(--hot-pink)';
                 return;
             }
             
@@ -1318,6 +1465,8 @@
             if (rewardHours > 0) {
                 state.user.timeMs += rewardHours * 3600000;
                 showPopup('NUEVO ALIADO', `Conectado con ${newFriend.name}`, rewardHours * 3600000);
+            } else {
+                showPopup('ALIADO AÑADIDO', `${newFriend.name}<br>Sin recompensa`, 0);
             }
             
             document.getElementById('friendCodeInput').value = '';
@@ -1325,150 +1474,160 @@
             setTimeout(() => showScreen('home'), 2000);
         }
 
-        // ==================== FRIENDS LIST ====================
+        // Friends List
         function renderFriendsList() {
             const container = document.getElementById('friendsListContainer');
             container.innerHTML = '';
             
             const sorted = [...state.friends].sort((a, b) => a.timeMs - b.timeMs);
+            const colors = ['var(--acid-green)', 'var(--hot-pink)', 'var(--cyan)', '#ff8800', 'var(--chrome)'];
             
-            sorted.forEach(f => {
+            sorted.forEach((f, i) => {
                 const div = document.createElement('div');
-                div.className = 'friend-item';
+                div.className = 'friend-card';
+                const color = colors[i % colors.length];
                 const hours = f.timeMs / 3600000;
+                
                 div.innerHTML = `
-                    <div>
-                        <div class="friend-name">${f.name}</div>
-                        <div style="font-size:0.6rem;opacity:0.4;">${f.id}</div>
+                    <div class="friend-avatar" style="border-color: ${color}; color: ${color}; box-shadow: 0 0 20px ${color}40;">
+                        ${f.name.charAt(0)}
                     </div>
-                    <div class="friend-time ${hours < 12 ? 'danger' : ''}">${formatTime(f.timeMs)}</div>
+                    <div class="friend-name-card" style="color: ${color};">${f.name}</div>
+                    <div class="friend-time-card" style="color: ${hours < 12 ? 'var(--hot-pink)' : '#888'};">
+                        ${formatShortTime(f.timeMs)}
+                    </div>
                 `;
+                
                 container.appendChild(div);
             });
             
             if (state.friends.length === 0) {
-                container.innerHTML = '<div style="text-align:center;opacity:0.5;margin-top:40%;font-size:0.8rem;">SIN ALIADOS AÚN</div>';
+                container.innerHTML = '<div style="text-align:center;opacity:0.5;padding:50px;">>> SIN ALIADOS <<</div>';
             }
         }
 
-        // ==================== CUSTOM SELECTS ====================
-        function toggleGiftSelect() {
-            document.getElementById('giftOptions').classList.toggle('open');
-        }
-
-        function toggleTokeSelect() {
-            document.getElementById('tokeOptions').classList.toggle('open');
-        }
-
-        function selectGiftFriend(friendId, friendName) {
-            selectedGiftFriend = friendId;
-            document.getElementById('giftTriggerText').textContent = friendName;
-            document.getElementById('giftOptions').classList.remove('open');
-            document.getElementById('sendGiftBtn').disabled = false;
-        }
-
-        function selectTokeFriend(friendId, friendName) {
-            selectedTokeFriend = friendId;
-            document.getElementById('tokeTriggerText').textContent = friendName;
-            document.getElementById('tokeOptions').classList.remove('open');
-            renderTokes();
-        }
-
-        // ==================== SEND TIME ====================
+        // Send Time
         function updateSendTime() {
-            const options = document.getElementById('giftOptions');
-            options.innerHTML = '';
-            selectedGiftFriend = null;
-            document.getElementById('giftTriggerText').textContent = 'SELECCIONAR ALIADO';
+            const container = document.getElementById('giftFriendsList');
+            container.innerHTML = '';
+            state.selectedGiftFriend = null;
+            
+            const canGift = state.dailyActions.giftsSent < 1;
+            document.getElementById('giftStatus').textContent = canGift ? 'DISPONIBLE' : 'YA USADO';
+            document.getElementById('giftStatus').style.color = canGift ? 'var(--acid-green)' : '#555';
             document.getElementById('sendGiftBtn').disabled = true;
             
             if (state.friends.length === 0) {
-                options.innerHTML = `
-                    <div class="no-friends-msg">
-                        NO TIENES ALIADOS<br>
-                        <button class="btn-primary no-friends-btn" onclick="showScreen('makeFriend')">AÑADIR ALIADO</button>
-                    </div>`;
-            } else {
-                state.friends.forEach(f => {
-                    const div = document.createElement('div');
-                    div.className = 'custom-option';
-                    div.innerHTML = `<span class="option-name">${f.name}</span><span class="option-time">${formatShortTime(f.timeMs)}</span>`;
-                    div.onclick = () => selectGiftFriend(f.id, f.name);
-                    options.appendChild(div);
-                });
-            }
-            
-            const canGift = state.dailyActions.giftsSent < 1;
-            document.getElementById('giftStatus').textContent = canGift ? 'DISPONIBLE' : 'YA USADO HOY';
-            document.getElementById('giftStatus').style.color = canGift ? 'var(--neon-green)' : '#555';
-        }
-
-        function sendGift() {
-            if (!selectedGiftFriend) return;
-            if (state.dailyActions.giftsSent >= 1) {
-                showPopup('LÍMITE', 'Ya enviaste un regalo hoy');
+                container.innerHTML = '<div style="text-align:center;padding:20px;">>> AÑADE ALIADOS PRIMERO <<</div>';
                 return;
             }
             
-            const friend = state.friends.find(f => f.id === selectedGiftFriend);
+            const colors = ['var(--acid-green)', 'var(--hot-pink)', 'var(--cyan)', '#ff8800', 'var(--chrome)'];
+            
+            state.friends.forEach((f, i) => {
+                const div = document.createElement('div');
+                div.className = 'friend-card';
+                div.onclick = () => selectGiftFriend(f.id, div);
+                const color = colors[i % colors.length];
+                
+                div.innerHTML = `
+                    <div class="friend-avatar" style="border-color: ${color}; color: ${color};">
+                        ${f.name.charAt(0)}
+                    </div>
+                    <div class="friend-name-card" style="color: ${color};">${f.name}</div>
+                    <div class="friend-time-card">${formatShortTime(f.timeMs)}</div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+
+        function selectGiftFriend(friendId, element) {
+            document.querySelectorAll('#giftFriendsList .friend-card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            state.selectedGiftFriend = friendId;
+            document.getElementById('sendGiftBtn').disabled = false;
+        }
+
+        function sendGift() {
+            if (!state.selectedGiftFriend) return;
+            if (state.dailyActions.giftsSent >= 1) {
+                showPopup('LÍMITE', 'Ya enviaste regalo hoy');
+                return;
+            }
+            
+            const friend = state.friends.find(f => f.id === state.selectedGiftFriend);
             friend.timeMs += 3600000;
             state.dailyActions.giftsSent = 1;
             saveState();
             
-            showPopup('REGALO ENVIADO', `Enviaste 1:00:00 a ${friend.name}`, 0);
+            showPopup('REGALO ENVIADO', `+1:00:00 a ${friend.name}`, 0);
             setTimeout(() => showScreen('home'), 2000);
         }
 
-        // ==================== PLAY TOKES ====================
+        // Play Tokes
         function updatePlayTokes() {
-            const options = document.getElementById('tokeOptions');
-            options.innerHTML = '';
-            selectedTokeFriend = null;
-            document.getElementById('tokeTriggerText').textContent = 'SELECCIONAR ALIADO';
+            const container = document.getElementById('tokeFriendsList');
+            container.innerHTML = '';
+            state.selectedTokeFriend = null;
             
             const availableFriends = state.friends.filter(f => !state.dailyActions.usedFriends.includes(f.id));
             
             if (availableFriends.length === 0) {
                 if (state.friends.length === 0) {
-                    options.innerHTML = `
-                        <div class="no-friends-msg">
-                            NO TIENES ALIADOS<br>
-                            <button class="btn-primary no-friends-btn" onclick="showScreen('makeFriend')">AÑADIR ALIADO</button>
-                        </div>`;
+                    container.innerHTML = '<div style="text-align:center;padding:20px;">>> AÑADE ALIADOS <<</div>';
                 } else {
-                    options.innerHTML = '<div class="no-friends-msg">YA USASTE TOKES CON TODOS TUS ALIADOS HOY</div>';
+                    container.innerHTML = '<div style="text-align:center;padding:20px;">>> YA USASTE CON TODOS <<</div>';
                 }
             } else {
-                availableFriends.forEach(f => {
+                const colors = ['var(--acid-green)', 'var(--hot-pink)', 'var(--cyan)', '#ff8800', 'var(--chrome)'];
+                availableFriends.forEach((f, i) => {
                     const div = document.createElement('div');
-                    div.className = 'custom-option';
-                    div.innerHTML = `<span class="option-name">${f.name}</span><span class="option-time">${formatShortTime(f.timeMs)}</span>`;
-                    div.onclick = () => selectTokeFriend(f.id, f.name);
-                    options.appendChild(div);
+                    div.className = 'friend-card';
+                    div.onclick = () => selectTokeFriend(f.id, div);
+                    const color = colors[i % colors.length];
+                    
+                    div.innerHTML = `
+                        <div class="friend-avatar" style="border-color: ${color}; color: ${color};">
+                            ${f.name.charAt(0)}
+                        </div>
+                        <div class="friend-name-card" style="color: ${color};">${f.name}</div>
+                        <div class="friend-time-card">${formatShortTime(f.timeMs)}</div>
+                    `;
+                    
+                    container.appendChild(div);
                 });
             }
             
-            renderTokes();
+            renderTokesButtons();
         }
 
-        function renderTokes() {
+        function selectTokeFriend(friendId, element) {
+            document.querySelectorAll('#tokeFriendsList .friend-card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            state.selectedTokeFriend = friendId;
+            renderTokesButtons();
+        }
+
+        function renderTokesButtons() {
             const container = document.getElementById('tokesContainer');
             container.innerHTML = '';
             
             const remaining = 5 - state.dailyActions.tokesUsed;
-            document.getElementById('tokesLeft').textContent = `${remaining} restantes${remaining === 0 ? ' - BONUS DESBLOQUEADO' : ''}`;
+            document.getElementById('tokesLeft').textContent = `${remaining} RESTANTES${remaining === 0 ? ' - BONUS!' : ''}`;
             
             TOKE_MESSAGES.forEach((toke, idx) => {
                 const btn = document.createElement('button');
-                btn.className = 'toke-btn';
+                btn.className = 'toke-card';
+                
                 const used = state.dailyActions.tokesUsed > idx;
                 if (used) btn.classList.add('used');
-                if (!used && selectedTokeFriend) btn.classList.add('selected');
+                if (!used && state.selectedTokeFriend) btn.classList.add('selected');
                 
                 btn.innerHTML = `
-                    <div style="font-weight:400;margin-bottom:3px;">${toke.text}</div>
-                    <div style="font-size:0.6rem;opacity:0.6;">${toke.emoji}</div>
-                    ${toke.reward > 0 && !used ? `<span class="toke-reward">+${toke.reward}:00</span>` : ''}
+                    <div class="toke-emoji">${toke.emoji}</div>
+                    <div class="toke-text">${toke.text}</div>
+                    ${toke.reward > 0 && !used ? '<div class="toke-reward-badge">+2H</div>' : ''}
                 `;
                 
                 btn.onclick = () => sendToke(idx);
@@ -1479,40 +1638,41 @@
                 state.user.timeMs += 6 * 3600000;
                 state.dailyActions.gotBonus = true;
                 saveState();
-                setTimeout(() => showPopup('BONUS', '¡Usaste 5 tokes! +6:00:00', 6 * 3600000), 500);
+                setTimeout(() => showPopup('BONUS!', '5 TOKES = +6:00:00', 6 * 3600000), 500);
             }
         }
 
         function sendToke(index) {
-            if (!selectedTokeFriend) {
-                showPopup('SELECCIONA ALIADO', 'Primero elige a quién enviar el toke');
+            if (!state.selectedTokeFriend) {
+                showPopup('SELECCIONA', 'Elige un aliado primero');
                 return;
             }
             if (state.dailyActions.tokesUsed >= 5) {
-                showPopup('LÍMITE', 'Ya usaste tus 5 tokes de hoy');
+                showPopup('LÍMITE', 'Ya usaste 5 tokes hoy');
                 return;
             }
             
             const toke = TOKE_MESSAGES[index];
-            const friend = state.friends.find(f => f.id === selectedTokeFriend);
+            const friend = state.friends.find(f => f.id === state.selectedTokeFriend);
             
+            let timeGained = 0;
             if (toke.reward > 0) {
                 state.user.timeMs += toke.reward * 3600000;
+                timeGained = toke.reward * 3600000;
             }
             friend.timeMs += 0.5 * 3600000;
             
             state.dailyActions.tokesUsed++;
-            state.dailyActions.usedFriends.push(selectedTokeFriend);
+            state.dailyActions.usedFriends.push(state.selectedTokeFriend);
             
             saveState();
-            showPopup('TOKE ENVIADO', `A ${friend.name}:<br>"${toke.text}"<br>${toke.reward > 0 ? `+${toke.reward}:00:00 para ti` : ''}`, toke.reward * 3600000);
+            showPopup('TOKE ENVIADO', `A ${friend.name}:<br>"${toke.text}"`, timeGained);
             
-            selectedTokeFriend = null;
-            document.getElementById('tokeTriggerText').textContent = 'SELECCIONAR ALIADO';
+            state.selectedTokeFriend = null;
             updatePlayTokes();
         }
 
-        // ==================== CONGELADO ====================
+        // Frozen
         function enterFrozenState() {
             if (state.frozenState.isFrozen) return;
             state.frozenState.isFrozen = true;
@@ -1533,9 +1693,9 @@
             
             let infoText = '';
             if (hoursFrozen < 24) {
-                infoText = `DÍA 1: Pronto perderás 2 aliados<br>Espera ${formatTime(resurrectTime)} para resucitar con 12:00:00`;
+                infoText = `DÍA 1: Perderás 2 aliados<br>Resucitas en ${formatTime(resurrectTime)}`;
             } else if (hoursFrozen < 48) {
-                infoText = `DÍA 2: Perdiste 2 aliados<br>Pronto perderás el resto<br>Espera ${formatTime(resurrectTime)} para resucitar`;
+                infoText = `DÍA 2: Perdiste 2 aliados<br>Pronto pierdes el resto<br>Resucitas en ${formatTime(resurrectTime)}`;
             } else {
                 resurrectNow();
                 return;
@@ -1559,11 +1719,11 @@
             state.friends = [];
             state.dailyActions = { giftsSent: 0, tokesUsed: 0, lastReset: Date.now(), gotBonus: false, usedFriends: [] };
             saveState();
-            showPopup('RESURRECCIÓN', 'Has vuelto con 12:00:00<br>0 aliados<br>Empieza de nuevo', 12 * 3600000);
+            showPopup('RESURRECCIÓN', '12:00:00 | 0 ALIADOS<br>NUEVA OPORTUNIDAD', 12 * 3600000);
             setTimeout(() => showScreen('home'), 3000);
         }
 
-        // ==================== INIT ====================
+        // Init
         function init() {
             if (loadState() && state.user) {
                 if (state.frozenState.isFrozen) showScreen('frozen');
