@@ -3,37 +3,54 @@ const API_URL = 'https://is-time-mvp.onrender.com/api';
 class App {
     constructor() {
         this.userId = localStorage.getItem('isTimeUserId');
-        this.splashTimer = null;
+        this.splashInterval = null;
+        this.canSkip = false;
     }
 
     init() {
-        this.startSplashTimer();
+        this.startRealTimer();
         
-        // Mostrar registro después de 8 segundos (después de las 3 frases)
+        // Permitir skip después de 1 segundo
+        setTimeout(() => this.canSkip = true, 1000);
+        
+        // Auto-skip después de 10 segundos si no ha hecho click
         setTimeout(() => {
-            if (!this.userId) {
-                this.showScreen('register');
-            } else {
-                this.showScreen('home');
-                this.loadTime();
+            if (document.getElementById('splash').classList.contains('active')) {
+                this.skipSplash();
             }
-        }, 8000);
+        }, 10000);
 
-        document.getElementById('startBtn').addEventListener('click', () => this.register());
+        document.getElementById('startBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.register();
+        });
     }
 
-    startSplashTimer() {
-        // Cuenta regresiva aleatoria estilo película
-        let time = 25 * 3600000 + Math.random() * 3600000;
+    startRealTimer() {
+        // Reloj con segundos REALES (no acelerado)
         const el = document.getElementById('splashTimer');
+        let totalSeconds = 0;
         
-        this.splashTimer = setInterval(() => {
-            time -= 1000;
-            const h = Math.floor(time / 3600000);
-            const m = Math.floor((time % 3600000) / 60000);
-            const s = Math.floor((time % 60000) / 1000);
+        this.splashInterval = setInterval(() => {
+            totalSeconds++;
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
             el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-        }, 100);
+        }, 1000);
+    }
+
+    skipSplash() {
+        if (!this.canSkip) return;
+        
+        clearInterval(this.splashInterval);
+        
+        if (this.userId) {
+            this.showScreen('home');
+            this.loadTime();
+        } else {
+            this.showScreen('register');
+        }
     }
 
     showScreen(id) {
@@ -46,13 +63,14 @@ class App {
         const errorEl = document.getElementById('errorMsg');
         
         if (!username || username.length < 2 || username.length > 12) {
-            errorEl.textContent = 'NOMBRE INVALIDO (2-12 CARACTERES)';
+            errorEl.textContent = 'NOMBRE INVALIDO';
             return;
         }
 
+        errorEl.textContent = 'CONECTANDO...';
+        errorEl.style.color = '#00ff41';
+
         try {
-            errorEl.textContent = 'CONECTANDO...';
-            
             const res = await fetch(`${API_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -62,6 +80,7 @@ class App {
             const data = await res.json();
             
             if (data.error) {
+                errorEl.style.color = '#ff0040';
                 errorEl.textContent = data.error.toUpperCase();
                 return;
             }
@@ -69,32 +88,36 @@ class App {
             this.userId = data.user.id;
             localStorage.setItem('isTimeUserId', this.userId);
             
-            clearInterval(this.splashTimer);
             this.showScreen('home');
-            this.loadTime();
+            this.startGameTimer(72 * 3600000);
             
         } catch (err) {
-            errorEl.textContent = 'ERROR DE CONEXION. INTENTA DE NUEVO';
+            errorEl.style.color = '#ff0040';
+            errorEl.textContent = 'ERROR DE RED';
             console.error(err);
         }
     }
 
-    async loadTime() {
-        // Aquí cargarías el tiempo real del servidor
-        // Por ahora simulado
-        this.startLocalTimer(72 * 3600000);
-    }
-
-    startLocalTimer(ms) {
+    startGameTimer(ms) {
         const el = document.getElementById('timerDisplay');
         
         setInterval(() => {
             ms -= 1000;
+            if (ms <= 0) ms = 0;
+            
             const h = Math.floor(ms / 3600000);
             const m = Math.floor((ms % 3600000) / 60000);
             const s = Math.floor((ms % 60000) / 1000);
             el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            
+            // Cambiar color si poco tiempo
+            if (ms < 6 * 3600000) el.style.color = '#ff0040';
+            else if (ms < 24 * 3600000) el.style.color = '#00d4ff';
         }, 1000);
+    }
+
+    loadTime() {
+        this.startGameTimer(72 * 3600000);
     }
 }
 
