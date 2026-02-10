@@ -2,14 +2,22 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
-body {
+html, body {
     font-family: 'Orbitron', monospace;
     background: #000;
     color: #00ff41;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
     overflow: hidden;
+    touch-action: manipulation;
+}
+
+#app {
+    height: 100%;
+    width: 100%;
 }
 
 .screen {
@@ -29,19 +37,25 @@ body {
     align-items: center;
 }
 
-/* SPLASH 1 - CENTRADO */
-.splash-main {
+/* Todo clickable */
+#splash1, #splash2 {
+    cursor: pointer;
+    z-index: 10;
+}
+
+.center-content {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 2.5rem;
+    pointer-events: none;
 }
 
 .logo-main {
-    font-size: 5rem;
+    font-size: 4.5rem;
     font-weight: 400;
-    letter-spacing: 1.5rem;
+    letter-spacing: 1.2rem;
     color: #00ff41;
     text-shadow: 0 0 40px #00ff41;
 }
@@ -55,13 +69,14 @@ body {
     font-variant-numeric: tabular-nums;
 }
 
-.click-hint {
+.hint {
     position: absolute;
-    bottom: 12%;
+    bottom: 15%;
     font-size: 0.7rem;
     letter-spacing: 0.2rem;
     opacity: 0.4;
     animation: blink 2s infinite;
+    pointer-events: none;
 }
 
 @keyframes blink {
@@ -69,37 +84,30 @@ body {
     50% { opacity: 0.5; }
 }
 
-/* SPLASH 2 - CENTRADO */
-.rules-main {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-}
-
+/* FRASES */
 .rule-line {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 400;
-    letter-spacing: 0.25rem;
+    letter-spacing: 0.2rem;
     color: #00ff41;
     text-shadow: 0 0 10px #00ff41;
     opacity: 0;
+    margin: 1rem 0;
 }
 
 .rule-line.show {
-    animation: pulseIn 1.2s forwards;
+    animation: fadeIn 1s forwards;
 }
 
-@keyframes pulseIn {
-    0% { opacity: 0; transform: scale(0.9); text-shadow: 0 0 0 #00ff41; }
-    50% { opacity: 1; transform: scale(1.05); text-shadow: 0 0 40px #00ff41; }
-    100% { opacity: 1; transform: scale(1); text-shadow: 0 0 15px #00ff41; }
+@keyframes fadeIn {
+    to { opacity: 1; text-shadow: 0 0 25px #00ff41; }
 }
 
 /* HOME */
 #home {
     justify-content: flex-start;
-    padding-top: 12vh;
+    padding-top: 10vh;
+    cursor: default;
 }
 
 .user-id {
@@ -153,10 +161,9 @@ body {
     cursor: pointer;
 }
 
-/* Responsive */
 @media (max-width: 400px) {
-    .logo-main { font-size: 3.5rem; letter-spacing: 1rem; }
-    .timer-countdown { font-size: 1.6rem; }
-    .rule-line { font-size: 1.1rem; }
-    .timer-main { font-size: 2.8rem; }
+    .logo-main { font-size: 3rem; letter-spacing: 0.8rem; }
+    .timer-countdown { font-size: 1.5rem; }
+    .rule-line { font-size: 1rem; }
+    .timer-main { font-size: 2.5rem; }
 }
