@@ -9,22 +9,23 @@
 </head>
 <body>
     <div id="app">
-        <!-- SPLASH 1: IS TIME + cuenta regresiva -->
+        <!-- SPLASH 1 -->
         <div id="splash1" class="screen active">
-            <div class="splash-main" onclick="app.showRules()">
+            <div class="splash-content" onclick="app.showRules(event)">
                 <h1 class="logo-main">IS TIME</h1>
                 <div class="timer-countdown" id="countdownTimer">24:00:00</div>
             </div>
             <div class="click-hint">[ TOCAR PARA CONTINUAR ]</div>
         </div>
 
-        <!-- SPLASH 2: 3 frases -->
-        <div id="splash2" class="screen" onclick="app.startGame()">
-            <div class="rules-main">
+        <!-- SPLASH 2 -->
+        <div id="splash2" class="screen">
+            <div class="rules-content" onclick="app.startGame(event)">
                 <p class="rule-line" id="rule1">TU TIEMPO DEFINE TU POSICION</p>
                 <p class="rule-line" id="rule2">GANAS TIEMPO CON PERSONAS REALES</p>
                 <p class="rule-line" id="rule3">CUANDO LLEGA A CERO, DESAPARECES</p>
             </div>
+            <div class="click-hint">[ TOCAR PARA INICIAR ]</div>
         </div>
 
         <!-- HOME -->
@@ -34,16 +35,16 @@
             <div class="pulse-heart" id="pulseHeart">♥</div>
             
             <div class="menu-grid">
-                <button class="menu-btn" onclick="app.makeFriend()">
+                <button class="menu-btn" onclick="event.stopPropagation(); app.makeFriend()">
                     <span class="btn-label">MAKE FRIEND</span>
                 </button>
-                <button class="menu-btn" onclick="app.sendTime()">
+                <button class="menu-btn" onclick="event.stopPropagation(); app.sendTime()">
                     <span class="btn-label">SEND TIME</span>
                 </button>
-                <button class="menu-btn" onclick="app.playTokens()">
+                <button class="menu-btn" onclick="event.stopPropagation(); app.playTokens()">
                     <span class="btn-label">PLAY</span>
                 </button>
-                <button class="menu-btn" onclick="app.showFriends()">
+                <button class="menu-btn" onclick="event.stopPropagation(); app.showFriends()">
                     <span class="btn-label">FRIENDS</span>
                 </button>
             </div>
