@@ -179,20 +179,6 @@
             color: #555;
         }
 
-        .btn-audio {
-            position: absolute;
-            bottom: 8%;
-            background: transparent;
-            border: 1px solid rgba(0, 255, 65, 0.4);
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 0.7rem;
-            padding: 15px 30px;
-            cursor: pointer;
-            letter-spacing: 0.15rem;
-            opacity: 0.8;
-        }
-
         #home {
             justify-content: flex-start;
             padding-top: 10vh;
@@ -722,7 +708,8 @@
         <div class="rule-line" id="rule1">TU TIEMPO DEFINE TU EXISTENCIA</div>
         <div class="rule-line" id="rule2">GANA TIEMPO CON PERSONAS REALES</div>
         <div class="rule-line" id="rule3">CUANDO LLEGAS A CERO, DESAPARECES</div>
-        <button class="btn-audio" id="btnAudio" onclick="activateAudio()">ACTIVAR SONIDO 🔇</button>
+        <button class="btn-primary" style="position: absolute; bottom: 8%; font-size: 0.7rem; padding: 15px 30px; margin: 0;" onclick="activateAudio()">ACTIVAR SONIDO 🔇</button>
+        <div class="hint-text">TOCAR PARA INICIAR</div>
     </div>
 
     <!-- 3. REGISTRO -->
@@ -900,9 +887,7 @@
             initAudio();
             if (audioContext.state === 'suspended') audioContext.resume();
             state.audioEnabled = true;
-            document.getElementById('btnAudio').textContent = 'SONIDO ACTIVADO 🔊';
-            document.getElementById('btnAudio').style.borderColor = 'var(--neon-green)';
-            setTimeout(() => showScreen('register'), 500);
+            showScreen('register');
         }
 
         function toggleAudio() {
@@ -994,11 +979,11 @@
 
         function saveState() {
             state.lastUpdate = Date.now();
-            localStorage.setItem('istime_data_v3', JSON.stringify(state));
+            localStorage.setItem('istime_data_v4', JSON.stringify(state));
         }
 
         function loadState() {
-            const saved = localStorage.getItem('istime_data_v3');
+            const saved = localStorage.getItem('istime_data_v4');
             if (saved) {
                 Object.assign(state, JSON.parse(saved));
                 const now = Date.now();
@@ -1256,10 +1241,14 @@
                 return;
             }
             
+            // En MVP, como no hay backend, pedimos el nombre del amigo manualmente
+            const friendName = prompt('Nombre del aliado:', `ALIADO_${code.slice(0,3)}`);
+            if (!friendName) return;
+            
             const rewardHours = REWARDS[Math.min(state.user.friendsMade, 4)];
             const newFriend = {
                 id: code,
-                name: `ALIADO_${code.slice(0,3)}`,
+                name: friendName.toUpperCase(),
                 timeMs: (20 + Math.random() * 40) * 3600000,
                 addedAt: Date.now()
             };
@@ -1367,11 +1356,27 @@
             }
             
             const friend = state.friends.find(f => f.id === state.selectedGiftFriend);
+            
+            // Guardar en "outbox" para que el amigo lo reciba cuando se conecte
+            // En MVP sin backend, guardamos en localStorage con clave especial
+            const outboxKey = `istime_outbox_${friend.id}`;
+            const outbox = JSON.parse(localStorage.getItem(outboxKey) || '[]');
+            outbox.push({
+                type: 'gift',
+                fromId: state.user.id,
+                fromName: state.user.name,
+                amount: 3600000,
+                timestamp: Date.now()
+            });
+            localStorage.setItem(outboxKey, JSON.stringify(outbox));
+            
+            // También sumamos al amigo localmente si está en nuestra lista
             friend.timeMs += 3600000;
+            
             state.dailyActions.giftsSent = 1;
             saveState();
             
-            showPopup('REGALO ENVIADO', `Enviaste 1:00:00 a ${friend.name}`, 0);
+            showPopup('REGALO ENVIADO', `Enviaste 1:00:00 a ${friend.name}<br>Se sumará cuando se conecte`, 0);
             setTimeout(() => showScreen('home'), 2000);
         }
 
@@ -1452,22 +1457,60 @@
             const toke = TOKE_MESSAGES[index];
             const friend = state.friends.find(f => f.id === state.selectedTokeFriend);
             
+            // Guardar en outbox del amigo
+            const outboxKey = `istime_outbox_${friend.id}`;
+            const outbox = JSON.parse(localStorage.getItem(outboxKey) || '[]');
+            outbox.push({
+                type: 'toke',
+                fromId: state.user.id,
+                fromName: state.user.name,
+                message: toke.text,
+                reward: toke.reward,
+                timestamp: Date.now()
+            });
+            localStorage.setItem(outboxKey, JSON.stringify(outbox));
+            
+            // Aplicar efecto local
             let timeGained = 0;
             if (toke.reward > 0) {
                 state.user.timeMs += toke.reward * 3600000;
                 timeGained = toke.reward * 3600000;
             }
+            
+            // El amigo también gana un poco localmente
             friend.timeMs += 0.5 * 3600000;
             
             state.dailyActions.tokesUsed++;
             state.dailyActions.usedFriends.push(state.selectedTokeFriend);
             
             saveState();
-            showPopup('TOKE ENVIADO', `A ${friend.name}:<br>"${toke.text}"<br>${toke.reward > 0 ? `+${toke.reward}:00:00 para ti` : ''}`, timeGained);
+            showPopup('TOKE ENVIADO', `A ${friend.name}:<br>"${toke.text}"<br>${toke.reward > 0 ? `+${toke.reward}:00:00 para ti` : ''}<br><br>Se enviará cuando se conecte`, timeGained);
             
             state.selectedTokeFriend = null;
             document.getElementById('tokeTriggerText').textContent = 'SELECCIONAR ALIADO';
             updatePlayTokes();
+        }
+
+        // Función para recibir de outbox (llamar al iniciar)
+        function receiveFromOutbox() {
+            if (!state.user) return;
+            
+            const outboxKey = `istime_outbox_${state.user.id}`;
+            const outbox = JSON.parse(localStorage.getItem(outboxKey) || '[]');
+            
+            if (outbox.length > 0) {
+                outbox.forEach(item => {
+                    if (item.type === 'gift') {
+                        state.inbox.gifts.push(item);
+                    } else if (item.type === 'toke') {
+                        state.inbox.tokes.push(item);
+                    }
+                });
+                
+                // Limpiar outbox recibido
+                localStorage.removeItem(outboxKey);
+                saveState();
+            }
         }
 
         // ==================== CONGELADO ====================
@@ -1524,6 +1567,7 @@
         // ==================== INIT ====================
         function init() {
             if (loadState() && state.user) {
+                receiveFromOutbox(); // Recibir regalos/tokes pendientes
                 if (state.frozenState.isFrozen) showScreen('frozen');
                 else showScreen('home');
             }
@@ -1543,6 +1587,9 @@
         setInterval(checkDailyReset, 3600000);
         window.addEventListener('beforeunload', saveState);
         document.addEventListener('gesturestart', e => e.preventDefault());
+        
+        // Verificar outbox cada 10 segundos
+        setInterval(receiveFromOutbox, 10000);
     </script>
 </body>
 </html>
