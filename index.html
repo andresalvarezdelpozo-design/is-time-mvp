@@ -2,27 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IS TIME</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div id="app">
         <!-- SPLASH -->
-        <div id="splash" class="screen active">
-            <div class="splash-content">
+        <div id="splash" class="screen active" onclick="app.skipSplash()">
+            <div class="splash-center">
                 <h1 class="logo">IS TIME</h1>
-                <div class="timer-splash" id="splashTimer">25:00:00</div>
+                <div class="timer-splash" id="splashTimer">00:00:00</div>
             </div>
             <div class="rules-container" id="rulesContainer">
                 <p class="rule-text">TU TIEMPO DEFINE TU POSICION</p>
                 <p class="rule-text">GANAS TIEMPO CON PERSONAS REALES</p>
                 <p class="rule-text">CUANDO LLEGA A CERO, DESAPARECES</p>
             </div>
+            <div class="click-hint">[ CLICK PARA CONTINUAR ]</div>
         </div>
 
         <!-- REGISTRO -->
@@ -43,37 +41,18 @@
             <div class="menu-grid">
                 <button class="menu-btn" onclick="app.showScreen('makeFriend')">
                     <span class="btn-label">MAKE FRIEND</span>
-                    <span class="btn-sublabel">NFC / QR</span>
                 </button>
                 <button class="menu-btn" onclick="app.showScreen('sendTime')">
                     <span class="btn-label">SEND TIME</span>
-                    <span class="btn-sublabel">TRANSFERIR</span>
                 </button>
                 <button class="menu-btn" onclick="app.showScreen('play')">
                     <span class="btn-label">PLAY</span>
-                    <span class="btn-sublabel">TOKENS</span>
                 </button>
                 <button class="menu-btn" onclick="app.showScreen('friends')">
                     <span class="btn-label">FRIENDS</span>
-                    <span class="btn-sublabel" id="friendCount">0</span>
                 </button>
             </div>
         </div>
-
-        <!-- RESTO DE PANTALLAS (igual que antes, las dejo para no hacerlo muy largo) -->
-        <div id="makeFriend" class="screen">
-            <div class="screen-header">
-                <button class="back-btn" onclick="app.showScreen('home')">←</button>
-                <h2>MAKE FRIEND</h2>
-            </div>
-            <div class="qr-container">
-                <canvas id="qrCanvas" width="250" height="250"></canvas>
-                <div class="qr-timer" id="qrTimer">10</div>
-            </div>
-            <button class="action-btn" onclick="app.startScan()">ESCANEAR QR</button>
-        </div>
-
-        <!-- Otras pantallas... -->
     </div>
 
     <script src="js/app.js"></script>
