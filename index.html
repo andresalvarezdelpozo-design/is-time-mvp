@@ -190,6 +190,7 @@
             width: 90%;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 0.75rem;
             font-weight: 300;
             opacity: 0.6;
@@ -708,7 +709,6 @@
         <div class="rule-line" id="rule1">TU TIEMPO DEFINE TU EXISTENCIA</div>
         <div class="rule-line" id="rule2">GANA TIEMPO CON PERSONAS REALES</div>
         <div class="rule-line" id="rule3">CUANDO LLEGAS A CERO, DESAPARECES</div>
-        <button class="btn-primary" style="position: absolute; bottom: 8%; font-size: 0.7rem; padding: 15px 30px; margin: 0;" onclick="activateAudio()">ACTIVAR SONIDO 🔇</button>
         <div class="hint-text">TOCAR PARA INICIAR</div>
     </div>
 
@@ -979,11 +979,11 @@
 
         function saveState() {
             state.lastUpdate = Date.now();
-            localStorage.setItem('istime_data_v4', JSON.stringify(state));
+            localStorage.setItem('istime_data_v5', JSON.stringify(state));
         }
 
         function loadState() {
-            const saved = localStorage.getItem('istime_data_v4');
+            const saved = localStorage.getItem('istime_data_v5');
             if (saved) {
                 Object.assign(state, JSON.parse(saved));
                 const now = Date.now();
@@ -1241,7 +1241,7 @@
                 return;
             }
             
-            // En MVP, como no hay backend, pedimos el nombre del amigo manualmente
+            // Pedir nombre del amigo
             const friendName = prompt('Nombre del aliado:', `ALIADO_${code.slice(0,3)}`);
             if (!friendName) return;
             
@@ -1357,27 +1357,31 @@
             
             const friend = state.friends.find(f => f.id === state.selectedGiftFriend);
             
-            // Guardar en "outbox" para que el amigo lo reciba cuando se conecte
-            // En MVP sin backend, guardamos en localStorage con clave especial
-            const outboxKey = `istime_outbox_${friend.id}`;
-            const outbox = JSON.parse(localStorage.getItem(outboxKey) || '[]');
-            outbox.push({
+            // Sistema de códigos de reclamo para MVP sin backend
+            const claimCode = generateClaimCode();
+            const claimData = {
                 type: 'gift',
                 fromId: state.user.id,
                 fromName: state.user.name,
+                toId: friend.id,
+                toName: friend.name,
                 amount: 3600000,
-                timestamp: Date.now()
-            });
-            localStorage.setItem(outboxKey, JSON.stringify(outbox));
+                code: claimCode,
+                timestamp: Date.now(),
+                claimed: false
+            };
             
-            // También sumamos al amigo localmente si está en nuestra lista
-            friend.timeMs += 3600000;
+            // Guardar en localStorage global de reclamos
+            let claims = JSON.parse(localStorage.getItem('istime_claims') || '[]');
+            claims.push(claimData);
+            localStorage.setItem('istime_claims', JSON.stringify(claims));
+            
+            // Mostrar código al usuario para que lo comparta
+            showPopup('REGALO ENVIADO', `Enviaste 1:00:00 a ${friend.name}<br><br>CÓDIGO DE RECLAMO:<br><span style="font-size:2rem;letter-spacing:0.3rem;">${claimCode}</span><br><br>Dale este código a ${friend.name} para que reclame su tiempo`, 0);
             
             state.dailyActions.giftsSent = 1;
             saveState();
-            
-            showPopup('REGALO ENVIADO', `Enviaste 1:00:00 a ${friend.name}<br>Se sumará cuando se conecte`, 0);
-            setTimeout(() => showScreen('home'), 2000);
+            setTimeout(() => showScreen('home'), 4000);
         }
 
         // ==================== PLAY TOKES ====================
@@ -1457,60 +1461,120 @@
             const toke = TOKE_MESSAGES[index];
             const friend = state.friends.find(f => f.id === state.selectedTokeFriend);
             
-            // Guardar en outbox del amigo
-            const outboxKey = `istime_outbox_${friend.id}`;
-            const outbox = JSON.parse(localStorage.getItem(outboxKey) || '[]');
-            outbox.push({
+            // Sistema de códigos de reclamo
+            const claimCode = generateClaimCode();
+            const claimData = {
                 type: 'toke',
                 fromId: state.user.id,
                 fromName: state.user.name,
+                toId: friend.id,
+                toName: friend.name,
                 message: toke.text,
                 reward: toke.reward,
-                timestamp: Date.now()
-            });
-            localStorage.setItem(outboxKey, JSON.stringify(outbox));
+                code: claimCode,
+                timestamp: Date.now(),
+                claimed: false
+            };
             
-            // Aplicar efecto local
+            let claims = JSON.parse(localStorage.getItem('istime_claims') || '[]');
+            claims.push(claimData);
+            localStorage.setItem('istime_claims', JSON.stringify(claims));
+            
+            // Aplicar efecto local al emisor
             let timeGained = 0;
             if (toke.reward > 0) {
                 state.user.timeMs += toke.reward * 3600000;
                 timeGained = toke.reward * 3600000;
             }
             
-            // El amigo también gana un poco localmente
-            friend.timeMs += 0.5 * 3600000;
-            
             state.dailyActions.tokesUsed++;
             state.dailyActions.usedFriends.push(state.selectedTokeFriend);
             
             saveState();
-            showPopup('TOKE ENVIADO', `A ${friend.name}:<br>"${toke.text}"<br>${toke.reward > 0 ? `+${toke.reward}:00:00 para ti` : ''}<br><br>Se enviará cuando se conecte`, timeGained);
+            
+            showPopup('TOKE ENVIADO', `A ${friend.name}:<br>"${toke.text}"<br><br>CÓDIGO DE RECLAMO:<br><span style="font-size:2rem;letter-spacing:0.3rem;">${claimCode}</span><br><br>Dale este código a ${friend.name}`, timeGained);
             
             state.selectedTokeFriend = null;
             document.getElementById('tokeTriggerText').textContent = 'SELECCIONAR ALIADO';
             updatePlayTokes();
         }
 
-        // Función para recibir de outbox (llamar al iniciar)
-        function receiveFromOutbox() {
+        function generateClaimCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 8; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+            return code;
+        }
+
+        // Función para reclamar (accesible desde cualquier pantalla)
+        function checkClaims() {
             if (!state.user) return;
             
-            const outboxKey = `istime_outbox_${state.user.id}`;
-            const outbox = JSON.parse(localStorage.getItem(outboxKey) || '[]');
+            const claims = JSON.parse(localStorage.getItem('istime_claims') || '[]');
+            const myClaims = claims.filter(c => c.toId === state.user.id && !c.claimed);
             
-            if (outbox.length > 0) {
-                outbox.forEach(item => {
-                    if (item.type === 'gift') {
-                        state.inbox.gifts.push(item);
-                    } else if (item.type === 'toke') {
-                        state.inbox.tokes.push(item);
+            if (myClaims.length > 0) {
+                let message = '';
+                let totalTime = 0;
+                
+                myClaims.forEach(c => {
+                    if (c.type === 'gift') {
+                        totalTime += c.amount;
+                        message += `✓ ${c.fromName} te envió ${formatTime(c.amount)}<br>`;
+                    } else if (c.type === 'toke') {
+                        if (c.reward > 0) {
+                            totalTime += c.reward * 3600000;
+                            message += `✓ ${c.fromName}: "${c.message}" → +${c.reward}:00:00<br>`;
+                        } else {
+                            message += `✓ ${c.fromName}: "${c.message}"<br>`;
+                        }
                     }
+                    c.claimed = true;
                 });
                 
-                // Limpiar outbox recibido
-                localStorage.removeItem(outboxKey);
-                saveState();
+                // Actualizar claims como reclamados
+                localStorage.setItem('istime_claims', JSON.stringify(claims));
+                
+                if (totalTime > 0) {
+                    state.user.timeMs += totalTime;
+                    saveState();
+                    showPopup('TIEMPO RECIBIDO', message, totalTime);
+                }
             }
+        }
+
+        // Botón para reclamar manualmente (en home)
+        function showClaimDialog() {
+            const code = prompt('Introduce código de reclamo:');
+            if (!code) return;
+            
+            const claims = JSON.parse(localStorage.getItem('istime_claims') || '[]');
+            const claim = claims.find(c => c.code === code.toUpperCase() && !c.claimed);
+            
+            if (!claim) {
+                showPopup('ERROR', 'Código inválido o ya reclamado');
+                return;
+            }
+            
+            if (claim.toId !== state.user.id) {
+                showPopup('ERROR', 'Este código no es para ti');
+                return;
+            }
+            
+            claim.claimed = true;
+            localStorage.setItem('istime_claims', JSON.stringify(claims));
+            
+            let timeGained = 0;
+            if (claim.type === 'gift') {
+                timeGained = claim.amount;
+            } else if (claim.type === 'toke' && claim.reward > 0) {
+                timeGained = claim.reward * 3600000;
+            }
+            
+            state.user.timeMs += timeGained;
+            saveState();
+            
+            showPopup('RECLAMADO', `De ${claim.fromName}:<br>${claim.type === 'gift' ? formatTime(claim.amount) : claim.message}`, timeGained);
         }
 
         // ==================== CONGELADO ====================
@@ -1567,7 +1631,7 @@
         // ==================== INIT ====================
         function init() {
             if (loadState() && state.user) {
-                receiveFromOutbox(); // Recibir regalos/tokes pendientes
+                checkClaims();
                 if (state.frozenState.isFrozen) showScreen('frozen');
                 else showScreen('home');
             }
@@ -1585,11 +1649,9 @@
         init();
         checkDailyReset();
         setInterval(checkDailyReset, 3600000);
+        setInterval(checkClaims, 10000); // Verificar reclamos cada 10 segundos
         window.addEventListener('beforeunload', saveState);
         document.addEventListener('gesturestart', e => e.preventDefault());
-        
-        // Verificar outbox cada 10 segundos
-        setInterval(receiveFromOutbox, 10000);
     </script>
 </body>
 </html>
