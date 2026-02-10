@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IS TIME</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -31,7 +33,6 @@
             position: fixed;
         }
 
-        /* Sistema de Pantallas */
         .screen {
             position: fixed;
             top: 0;
@@ -44,7 +45,7 @@
             align-items: center;
             background: var(--dark-bg);
             opacity: 0;
-            transition: opacity 0.6s ease;
+            transition: opacity 0.5s ease;
         }
 
         .screen.active {
@@ -53,76 +54,76 @@
             z-index: 10;
         }
 
-        /* Tipografía estilo In Time - Fina y Digital */
         .logo-main {
-            font-size: 3.2rem;
+            font-size: 3.5rem;
             font-weight: 300;
-            letter-spacing: 0.8rem;
+            letter-spacing: 1rem;
             text-transform: uppercase;
             margin-bottom: 2rem;
-            text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+            text-shadow: 0 0 30px rgba(0, 255, 65, 0.4);
             text-align: center;
         }
 
         .timer-display {
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             font-weight: 400;
-            letter-spacing: 0.2rem;
+            letter-spacing: 0.15rem;
             font-variant-numeric: tabular-nums;
-            text-shadow: 0 0 30px currentColor;
-            transition: color 0.3s ease, text-shadow 0.3s ease;
+            text-shadow: 0 0 25px currentColor;
+            transition: all 0.3s ease;
         }
 
         .timer-display.danger {
             color: var(--neon-red);
             text-shadow: 0 0 30px rgba(255, 51, 51, 0.6);
-            animation: pulse-red 1s infinite;
+            animation: pulse-red 0.8s infinite;
         }
 
         .timer-display.frozen {
-            color: #555;
+            color: #444;
             text-shadow: none;
         }
 
         @keyframes pulse-red {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+            50% { opacity: 0.7; }
         }
 
-        /* Splash Screens */
         .splash-timer {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 300;
-            letter-spacing: 0.3rem;
-            opacity: 0.8;
-            margin-top: 1rem;
+            letter-spacing: 0.4rem;
+            opacity: 0.7;
+            margin-top: 1.5rem;
         }
 
         .hint-text {
             position: absolute;
-            bottom: 10%;
-            font-size: 0.65rem;
-            letter-spacing: 0.15rem;
-            opacity: 0.4;
+            bottom: 12%;
+            font-size: 0.6rem;
+            letter-spacing: 0.2rem;
+            opacity: 0.35;
             font-weight: 300;
             animation: blink 2s infinite;
+            text-transform: uppercase;
         }
 
         @keyframes blink {
             0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.6; }
+            50% { opacity: 0.5; }
         }
 
         .rule-line {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 300;
-            letter-spacing: 0.15rem;
-            margin: 1.2rem 0;
+            letter-spacing: 0.12rem;
+            margin: 1rem 0;
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s ease;
+            transform: translateY(15px);
+            transition: all 0.7s ease;
             text-align: center;
-            max-width: 80%;
+            max-width: 85%;
+            line-height: 1.5;
         }
 
         .rule-line.show {
@@ -130,27 +131,26 @@
             transform: translateY(0);
         }
 
-        /* Formularios */
         .input-field {
             background: transparent;
-            border: 1px solid rgba(0, 255, 65, 0.3);
+            border: 1px solid rgba(0, 255, 65, 0.25);
             color: var(--neon-green);
             font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 300;
-            padding: 15px 20px;
+            padding: 18px 25px;
             text-align: center;
-            letter-spacing: 0.1rem;
+            letter-spacing: 0.15rem;
             width: 80%;
-            max-width: 300px;
-            margin: 1rem 0;
+            max-width: 320px;
+            margin: 0.8rem 0;
             outline: none;
             text-transform: uppercase;
         }
 
         .input-field:focus {
             border-color: var(--neon-green);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            box-shadow: 0 0 25px rgba(0, 255, 65, 0.15);
         }
 
         .btn-primary {
@@ -158,30 +158,31 @@
             border: 1px solid var(--neon-green);
             color: var(--neon-green);
             font-family: 'Orbitron', monospace;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 400;
-            letter-spacing: 0.2rem;
-            padding: 18px 40px;
-            margin-top: 2rem;
+            letter-spacing: 0.25rem;
+            padding: 20px 50px;
+            margin-top: 2.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
         }
 
         .btn-primary:hover, .btn-primary:active {
-            background: rgba(0, 255, 65, 0.1);
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+            background: rgba(0, 255, 65, 0.08);
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.25);
         }
 
         .btn-primary:disabled {
-            opacity: 0.3;
+            opacity: 0.25;
             cursor: not-allowed;
+            border-color: #333;
+            color: #555;
         }
 
-        /* Home Layout */
         #home {
             justify-content: flex-start;
-            padding-top: 8vh;
+            padding-top: 6vh;
         }
 
         .top-bar {
@@ -190,122 +191,170 @@
             width: 90%;
             display: flex;
             justify-content: space-between;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 300;
             opacity: 0.6;
-            letter-spacing: 0.1rem;
+            letter-spacing: 0.08rem;
+        }
+
+        .user-name-display {
+            font-weight: 500;
+            color: var(--neon-green);
         }
 
         .heart-container {
-            margin: 3vh 0;
-            font-size: 2rem;
-            animation: heartbeat 1.2s infinite;
+            margin: 2.5vh 0;
+            font-size: 1.8rem;
+            animation: heartbeat 1s infinite;
+            text-shadow: 0 0 15px rgba(255, 0, 64, 0.5);
         }
 
         .heart-container.fast {
-            animation: heartbeat 0.6s infinite;
+            animation: heartbeat 0.5s infinite;
+        }
+
+        .heart-container.slow {
+            animation: heartbeat 2s infinite;
+            opacity: 0.3;
         }
 
         @keyframes heartbeat {
-            0%, 100% { transform: scale(1); opacity: 0.4; }
-            25% { transform: scale(1.2); opacity: 1; }
-            50% { transform: scale(1); opacity: 0.4; }
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.25); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
         }
 
         .menu-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 12px;
             width: 85%;
-            max-width: 350px;
-            margin-top: 5vh;
+            max-width: 340px;
+            margin-top: 4vh;
         }
 
         .menu-btn {
             background: var(--glass);
-            border: 1px solid rgba(0, 255, 65, 0.25);
+            border: 1px solid rgba(0, 255, 65, 0.2);
             color: var(--neon-green);
             font-family: 'Orbitron', monospace;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 400;
-            letter-spacing: 0.08rem;
-            padding: 25px 10px;
+            letter-spacing: 0.1rem;
+            padding: 28px 15px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             text-transform: uppercase;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         .menu-btn:active {
-            background: rgba(0, 255, 65, 0.15);
-            transform: scale(0.95);
+            background: rgba(0, 255, 65, 0.12);
+            transform: scale(0.96);
         }
 
         .menu-btn:disabled {
-            opacity: 0.2;
+            opacity: 0.15;
             cursor: not-allowed;
         }
 
-        /* Pantallas Secundarias */
         .screen-header {
             position: absolute;
             top: 3vh;
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 300;
-            letter-spacing: 0.3rem;
+            letter-spacing: 0.4rem;
+            text-transform: uppercase;
         }
 
         .back-btn {
             position: absolute;
             top: 3vh;
             left: 5%;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             cursor: pointer;
-            opacity: 0.6;
+            opacity: 0.5;
+            font-weight: 300;
         }
 
-        /* QR y Códigos */
-        .qr-container {
-            background: white;
-            padding: 20px;
-            margin: 2rem 0;
-            border-radius: 10px;
-        }
-
-        .code-display {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 0.5rem;
-            margin: 1rem 0;
-            color: var(--neon-green);
-        }
-
-        .friend-input {
-            margin-top: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .qr-section {
+            margin-top: 8vh;
+            text-align: center;
             width: 100%;
         }
 
-        /* Lista de Amigos */
-        .friends-list {
-            width: 85%;
-            max-width: 350px;
-            max-height: 60vh;
+        .qr-label {
+            font-size: 0.7rem;
+            opacity: 0.5;
+            letter-spacing: 0.15rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .qr-box {
+            background: white;
+            padding: 15px;
+            display: inline-block;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .code-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.3rem;
+            margin-top: 0.5rem;
+            color: var(--neon-green);
+        }
+
+        .scanner-container {
+            width: 260px;
+            height: 260px;
+            margin: 1.5rem auto;
+            border: 2px solid var(--neon-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scanner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 40%, rgba(0,255,65,0.1) 50%, transparent 60%);
+            animation: scan 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .manual-input {
+            margin-top: 1.5rem;
+            width: 80%;
+        }
+
+        .friends-list-container {
+            width: 88%;
+            max-width: 360px;
+            max-height: 65vh;
             overflow-y: auto;
-            margin-top: 10vh;
+            margin-top: 12vh;
         }
 
         .friend-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid rgba(0, 255, 65, 0.1);
+            padding: 18px 15px;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.08);
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
         .friend-item:active {
@@ -314,7 +363,7 @@
 
         .friend-name {
             font-size: 0.9rem;
-            font-weight: 300;
+            font-weight: 400;
             letter-spacing: 0.05rem;
         }
 
@@ -324,59 +373,98 @@
             font-variant-numeric: tabular-nums;
         }
 
-        .friend-time.danger { color: var(--neon-red); }
+        .friend-time.danger {
+            color: var(--neon-red);
+        }
 
-        /* Tokens / Mensajes */
-        .tokens-grid {
+        .action-section {
+            margin-top: 15vh;
+            text-align: center;
             width: 85%;
-            max-width: 350px;
+        }
+
+        .action-info {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .friend-select {
+            background: transparent;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            color: var(--neon-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            padding: 15px;
+            width: 100%;
+            margin-bottom: 2rem;
+            outline: none;
+        }
+
+        .friend-select option {
+            background: #000;
+            color: var(--neon-green);
+        }
+
+        .tokes-grid {
+            width: 85%;
+            max-width: 360px;
             margin-top: 10vh;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
-        .token-btn {
+        .toke-btn {
             background: var(--glass);
             border: 1px solid rgba(0, 255, 65, 0.2);
             color: var(--neon-green);
             font-family: 'Orbitron', monospace;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 300;
-            padding: 20px;
+            padding: 20px 15px;
             text-align: left;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
+            line-height: 1.4;
         }
 
-        .token-btn:active {
-            background: rgba(0, 255, 65, 0.2);
+        .toke-btn:active {
+            background: rgba(0, 255, 65, 0.15);
         }
 
-        .token-btn.used {
-            opacity: 0.3;
+        .toke-btn.used {
+            opacity: 0.25;
             border-color: #333;
+            pointer-events: none;
         }
 
-        .token-reward {
+        .toke-btn.selected {
+            border-color: var(--neon-green);
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .toke-reward {
             position: absolute;
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--neon-green);
+            font-weight: 500;
         }
 
-        /* Pantalla Congelado */
         .frozen-screen {
             color: #555;
         }
 
         .frozen-timer {
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin: 2rem 0;
             letter-spacing: 0.2rem;
+            color: #444;
         }
 
         .resurrect-info {
@@ -385,40 +473,119 @@
             text-align: center;
             line-height: 1.6;
             margin-top: 2rem;
-            opacity: 0.7;
-        }
-
-        /* Utilidades */
-        .hidden { display: none !important; }
-        
-        .flash-green {
-            animation: flashGreen 0.5s ease;
-        }
-
-        @keyframes flashGreen {
-            0%, 100% { box-shadow: 0 0 0 rgba(0, 255, 65, 0); }
-            50% { box-shadow: 0 0 100px rgba(0, 255, 65, 0.5); }
-        }
-
-        .countdown-small {
-            font-size: 0.9rem;
             opacity: 0.6;
-            margin-top: 0.5rem;
         }
 
-        /* Scrollbar personalizada */
+        /* Popup/Modal */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .popup-content {
+            border: 1px solid var(--neon-green);
+            background: #000;
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 85%;
+            animation: popupIn 0.3s ease;
+        }
+
+        @keyframes popupIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .popup-title {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.1rem;
+        }
+
+        .popup-message {
+            font-size: 0.85rem;
+            font-weight: 300;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .popup-time {
+            font-size: 1.8rem;
+            color: var(--neon-green);
+            margin: 1rem 0;
+            text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+
+        .popup-btn {
+            background: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+            padding: 15px 40px;
+            cursor: pointer;
+            letter-spacing: 0.15rem;
+        }
+
+        .inbox-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--neon-red);
+            color: #000;
+            font-size: 0.6rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .hidden { display: none !important; }
+
         ::-webkit-scrollbar {
             width: 3px;
         }
+
         ::-webkit-scrollbar-track {
             background: #000;
         }
+
         ::-webkit-scrollbar-thumb {
             background: rgba(0, 255, 65, 0.3);
         }
     </style>
 </head>
 <body>
+
+    <!-- Popup Modal -->
+    <div class="popup-overlay" id="popup">
+        <div class="popup-content">
+            <div class="popup-title" id="popupTitle">NOTIFICACIÓN</div>
+            <div class="popup-message" id="popupMessage">Mensaje</div>
+            <div class="popup-time hidden" id="popupTime">+00:00</div>
+            <button class="popup-btn" onclick="closePopup()">ACEPTAR</button>
+        </div>
+    </div>
 
     <!-- 1. SPLASH 1 -->
     <div id="splash1" class="screen active">
@@ -432,16 +599,16 @@
         <div class="rule-line" id="rule1">TU TIEMPO DEFINE TU EXISTENCIA</div>
         <div class="rule-line" id="rule2">GANA TIEMPO CON PERSONAS REALES</div>
         <div class="rule-line" id="rule3">CUANDO LLEGAS A CERO, DESAPARECES</div>
-        <div class="hint-text" style="display:none;" id="splash2Hint">TOCAR PARA INICIAR</div>
+        <div class="hint-text" id="splash2Hint" style="display:none;">TOCAR PARA INICIAR</div>
     </div>
 
     <!-- 3. REGISTRO -->
     <div id="register" class="screen">
         <div class="logo-main" style="font-size: 2rem; margin-bottom: 3rem;">IDENTIDAD</div>
         <input type="text" class="input-field" id="usernameInput" placeholder="TU NOMBRE" maxlength="12">
-        <div class="countdown-small" id="idPreview">ID: ----</div>
+        <div class="code-text" id="idPreview" style="font-size: 1rem; opacity: 0.5;">ID: ----</div>
         <button class="btn-primary" id="startBtn" disabled>INICIAR</button>
-        <div style="position: absolute; bottom: 10%; font-size: 0.6rem; opacity: 0.4; text-align: center; max-width: 80%;">
+        <div style="position: absolute; bottom: 10%; font-size: 0.6rem; opacity: 0.4; text-align: center;">
             RECIBIRÁS 72:00:00 PARA COMENZAR
         </div>
     </div>
@@ -449,8 +616,8 @@
     <!-- 4. HOME -->
     <div id="home" class="screen">
         <div class="top-bar">
-            <span id="userIdDisplay">ID: ----</span>
-            <span id="friendsCount">0 AMIGOS</span>
+            <span class="user-name-display" id="userNameDisplay">----</span>
+            <span id="friendsCount">0 ALIADOS</span>
         </div>
         
         <div class="timer-display" id="mainTimer">72:00:00</div>
@@ -458,9 +625,12 @@
         
         <div class="menu-grid">
             <button class="menu-btn" id="btnMakeFriend">MAKE<br>FRIEND</button>
-            <button class="menu-btn" id="btnFriends">FRIENDS<br>LIST</button>
-            <button class="menu-btn" id="btnSendTime">SEND<br>TIME</button>
-            <button class="menu-btn" id="btnPlay">PLAY<br>TOKENS</button>
+            <button class="menu-btn" id="btnFriends">ALIADOS<br>LIST</button>
+            <button class="menu-btn" id="btnSendTime" style="position: relative;">
+                SEND<br>TIME
+                <span class="inbox-badge hidden" id="inboxBadge">0</span>
+            </button>
+            <button class="menu-btn" id="btnPlay">PLAY<br>TOKES</button>
         </div>
     </div>
 
@@ -469,16 +639,25 @@
         <div class="back-btn" onclick="showScreen('home')">← VOLVER</div>
         <div class="screen-header">CONEXIÓN</div>
         
-        <div style="margin-top: 15vh; text-align: center;">
-            <div style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 1rem;">TU CÓDIGO</div>
-            <div class="code-display" id="myCode">------</div>
-            <canvas id="qrCanvas" width="200" height="200" style="margin: 2rem 0; background: white; padding: 10px;"></canvas>
+        <div class="qr-section">
+            <div class="qr-label">TU CÓDIGO - ESCANEA PARA CONECTAR</div>
+            <div class="qr-box" id="qrContainer"></div>
+            <div class="code-text" id="myCode">------</div>
         </div>
 
-        <div class="friend-input">
-            <div style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 1rem;">AÑADIR AMIGO</div>
+        <div style="margin-top: 2rem; text-align: center; width: 100%;">
+            <div class="qr-label">ESCANEAR ALIADO</div>
+            <div class="scanner-container" id="scannerContainer">
+                <div class="scanner-overlay"></div>
+                <div id="qrReader" style="width: 100%; height: 100%;"></div>
+            </div>
+            <button class="btn-primary" onclick="startScanner()" style="margin-top: 0.5rem; padding: 12px 30px; font-size: 0.7rem;">INICIAR CÁMARA</button>
+        </div>
+
+        <div class="manual-input">
+            <div class="qr-label">O INTRODUCE CÓDIGO MANUAL</div>
             <input type="text" class="input-field" id="friendCodeInput" placeholder="CÓDIGO 6 DIG" maxlength="6">
-            <button class="btn-primary" onclick="addFriend()">CONECTAR</button>
+            <button class="btn-primary" onclick="addFriendManual()" style="margin-top: 1rem;">CONECTAR</button>
             <div id="addFriendMsg" style="font-size: 0.7rem; margin-top: 1rem; height: 1rem;"></div>
         </div>
     </div>
@@ -487,9 +666,7 @@
     <div id="friendsList" class="screen">
         <div class="back-btn" onclick="showScreen('home')">← VOLVER</div>
         <div class="screen-header">ALIADOS</div>
-        <div class="friends-list" id="friendsListContainer">
-            <!-- Amigos se generan aquí -->
-        </div>
+        <div class="friends-list-container" id="friendsListContainer"></div>
     </div>
 
     <!-- 7. SEND TIME -->
@@ -497,45 +674,47 @@
         <div class="back-btn" onclick="showScreen('home')">← VOLVER</div>
         <div class="screen-header">REGALO</div>
         
-        <div style="margin-top: 15vh; text-align: center; width: 80%;">
-            <div style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 2rem;">
-                1 REGALO/DÍA → +1:00:00<br>
+        <div class="action-section">
+            <div class="action-info">
+                1 REGALO/DÍA → +1:00:00 ALIADO<br>
                 <span id="giftStatus" style="color: var(--neon-green);">DISPONIBLE</span>
             </div>
             
-            <select id="giftTarget" class="input-field" style="margin-bottom: 2rem;">
-                <option value="">SELECCIONAR AMIGO</option>
+            <select class="friend-select" id="giftTarget">
+                <option value="">SELECCIONAR ALIADO</option>
             </select>
             
             <button class="btn-primary" id="sendGiftBtn" onclick="sendGift()">ENVIAR TIEMPO</button>
         </div>
     </div>
 
-    <!-- 8. PLAY (TOKENS) -->
-    <div id="playTokens" class="screen">
+    <!-- 8. PLAY TOKES -->
+    <div id="playTokes" class="screen">
         <div class="back-btn" onclick="showScreen('home')">← VOLVER</div>
-        <div class="screen-header">TOKENS</div>
+        <div class="screen-header">TOKES</div>
         
-        <div style="margin-top: 8vh; text-align: center; width: 85%;">
-            <div style="font-size: 0.7rem; opacity: 0.6; margin-bottom: 1rem;">
-                5 TOKENS/DÍA A 5 AMIGOS DISTINTOS<br>
-                USA LOS 5 → +6:00:00 BONUS
+        <div class="action-section" style="margin-top: 8vh;">
+            <div class="action-info" style="font-size: 0.7rem;">
+                5 TOKES/DÍA A 5 ALIADOS DISTINTOS<br>
+                USA LOS 5 → +6:00:00 BONUS<br>
+                <span id="tokesLeft" style="color: var(--neon-green);">5 restantes</span>
             </div>
-            <div style="font-size: 0.7rem; margin-bottom: 1rem;" id="tokensLeft">5 restantes</div>
+            
+            <select class="friend-select" id="tokeTarget" style="margin-bottom: 1.5rem;">
+                <option value="">SELECCIONAR ALIADO</option>
+            </select>
         </div>
 
-        <div class="tokens-grid" id="tokensContainer">
-            <!-- Tokens generados dinámicamente -->
-        </div>
+        <div class="tokes-grid" id="tokesContainer"></div>
     </div>
 
     <!-- 9. CONGELADO -->
     <div id="frozen" class="screen frozen-screen">
-        <div class="logo-main" style="color: #555; text-shadow: none;">CONGELADO</div>
+        <div class="logo-main" style="font-size: 2.5rem; color: #444; text-shadow: none; margin-bottom: 1rem;">CONGELADO</div>
         <div class="frozen-timer" id="resurrectTimer">48:00:00</div>
-        <div style="font-size: 4rem; opacity: 0.2;">✕</div>
+        <div style="font-size: 3rem; opacity: 0.15;">✕</div>
         <div class="resurrect-info" id="frozenInfo">
-            DÍA 1: Perderás 2 amigos<br>
+            DÍA 1: Perderás 2 aliados<br>
             Espera 48h para resucitar con 12:00:00
         </div>
     </div>
@@ -548,25 +727,109 @@
             lastUpdate: Date.now(),
             dailyActions: {
                 giftsSent: 0,
-                tokensUsed: 0,
+                tokesUsed: 0,
                 lastReset: Date.now(),
-                friendsMadeToday: 0
+                gotBonus: false,
+                usedFriends: []
             },
             frozenState: {
                 isFrozen: false,
                 frozenAt: null,
                 dayCount: 0
+            },
+            inbox: {
+                gifts: [],
+                tokes: []
             }
         };
 
-        const REWARDS = [24, 24, 12, 6, 0]; // Horas por amigo 1-5
-        const TOKEN_MESSAGES = [
-            { text: "¡Pásame un poco de vida, colega!", type: "life", emoji: "😎⏳😂🔥" },
-            { text: "Me acuerdo de ti", type: "social", emoji: "😎⏳😂🔥" },
-            { text: "¿Qué pasa, máquina?", type: "social", emoji: "😎⏳😂🔥" },
-            { text: "Vamos a liarla", type: "social", emoji: "😎⏳😂🔥" },
-            { text: "No me falles hoy", type: "social", emoji: "😎⏳😂🔥" }
+        const REWARDS = [24, 24, 12, 6, 0];
+        const TOKE_MESSAGES = [
+            { text: "¡Pásame un poco de vida, colega!", type: "life", reward: 2, emoji: "😎⏳😂🔥" },
+            { text: "Me acuerdo de ti", type: "social", reward: 0, emoji: "😎⏳😂🔥" },
+            { text: "¿Qué pasa, máquina?", type: "social", reward: 0, emoji: "😎⏳😂🔥" },
+            { text: "Vamos a liarla", type: "social", reward: 0, emoji: "😎⏳😂🔥" },
+            { text: "No me falles hoy", type: "social", reward: 0, emoji: "😎⏳😂🔥" }
         ];
+
+        let html5QrCode = null;
+        let audioContext = null;
+        let heartbeatOscillator = null;
+        let heartbeatGain = null;
+        let heartbeatInterval = null;
+
+        // ==================== AUDIO - CORAZÓN LATIENDO ====================
+        function initAudio() {
+            if (audioContext) return;
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playHeartbeat() {
+            if (!audioContext) initAudio();
+            if (heartbeatOscillator) return;
+            
+            const hours = state.user ? state.user.timeMs / 3600000 : 72;
+            let bpm = 60;
+            let volume = 0.3;
+            
+            if (state.frozenState.isFrozen) {
+                bpm = 30;
+                volume = 0.1;
+            } else if (hours < 12) {
+                bpm = 120;
+                volume = 0.5;
+            }
+            
+            const interval = 60000 / bpm;
+            
+            heartbeatInterval = setInterval(() => {
+                if (!audioContext) return;
+                
+                // "Lub"
+                const osc1 = audioContext.createOscillator();
+                const gain1 = audioContext.createGain();
+                osc1.frequency.value = 80;
+                osc1.type = 'sine';
+                gain1.gain.setValueAtTime(volume, audioContext.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                osc1.connect(gain1);
+                gain1.connect(audioContext.destination);
+                osc1.start();
+                osc1.stop(audioContext.currentTime + 0.1);
+                
+                // "Dub" (100ms después)
+                setTimeout(() => {
+                    const osc2 = audioContext.createOscillator();
+                    const gain2 = audioContext.createGain();
+                    osc2.frequency.value = 60;
+                    osc2.type = 'sine';
+                    gain2.gain.setValueAtTime(volume * 0.8, audioContext.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
+                    osc2.connect(gain2);
+                    gain2.connect(audioContext.destination);
+                    osc2.start();
+                    osc2.stop(audioContext.currentTime + 0.08);
+                }, 100);
+                
+            }, interval);
+        }
+
+        function stopHeartbeat() {
+            if (heartbeatInterval) {
+                clearInterval(heartbeatInterval);
+                heartbeatInterval = null;
+            }
+        }
+
+        function updateHeartbeat() {
+            stopHeartbeat();
+            const homeActive = document.getElementById('home').classList.contains('active');
+            const frozenActive = document.getElementById('frozen').classList.contains('active');
+            
+            if (homeActive || frozenActive) {
+                playHeartbeat();
+            }
+        }
 
         // ==================== UTILIDADES ====================
         function generateId() {
@@ -589,10 +852,11 @@
         function formatShortTime(ms) {
             const hours = Math.floor(ms / 3600000);
             const minutes = Math.floor((ms % 3600000) / 60000);
-            return `${hours}h${minutes}m`;
+            return `${hours}h ${minutes}m`;
         }
 
         function saveState() {
+            state.lastUpdate = Date.now();
             localStorage.setItem('istime_data', JSON.stringify(state));
         }
 
@@ -602,15 +866,18 @@
                 const parsed = JSON.parse(saved);
                 Object.assign(state, parsed);
                 
-                // Recalcular tiempo perdido
                 const now = Date.now();
                 const elapsed = now - state.lastUpdate;
+                
                 if (state.user && !state.frozenState.isFrozen) {
                     state.user.timeMs = Math.max(0, state.user.timeMs - elapsed);
+                    state.friends.forEach(f => {
+                        f.timeMs = Math.max(0, f.timeMs - elapsed);
+                    });
                 }
+                
                 state.lastUpdate = now;
                 
-                // Verificar si necesita resurrección
                 if (state.user && state.user.timeMs <= 0 && !state.frozenState.isFrozen) {
                     enterFrozenState();
                 }
@@ -620,24 +887,49 @@
             return false;
         }
 
+        // ==================== POPUP SYSTEM ====================
+        function showPopup(title, message, timeBonus = null) {
+            document.getElementById('popupTitle').textContent = title;
+            document.getElementById('popupMessage').innerHTML = message;
+            
+            const timeEl = document.getElementById('popupTime');
+            if (timeBonus) {
+                timeEl.textContent = `+${formatTime(timeBonus)}`;
+                timeEl.classList.remove('hidden');
+            } else {
+                timeEl.classList.add('hidden');
+            }
+            
+            document.getElementById('popup').classList.add('active');
+            
+            if (navigator.vibrate) {
+                navigator.vibrate(timeBonus ? [100, 50, 100, 50, 200] : [100, 50, 100]);
+            }
+        }
+
+        function closePopup() {
+            document.getElementById('popup').classList.remove('active');
+        }
+
         // ==================== NAVEGACIÓN ====================
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => {
                 s.classList.remove('active');
                 setTimeout(() => {
                     if (!s.classList.contains('active')) s.style.display = 'none';
-                }, 600);
+                }, 500);
             });
             
             const target = document.getElementById(screenId);
             target.style.display = 'flex';
             setTimeout(() => target.classList.add('active'), 10);
             
-            // Actualizaciones específicas por pantalla
+            updateHeartbeat();
+            
             if (screenId === 'home') updateHome();
             if (screenId === 'friendsList') renderFriendsList();
             if (screenId === 'sendTime') updateSendTime();
-            if (screenId === 'playTokens') renderTokens();
+            if (screenId === 'playTokes') renderTokes();
             if (screenId === 'makeFriend') updateMakeFriend();
             if (screenId === 'frozen') updateFrozen();
         }
@@ -652,7 +944,10 @@
         }, 1000);
 
         document.getElementById('splash1').addEventListener('click', () => {
+            if (!audioContext) initAudio();
+            
             if (state.user) {
+                checkInbox();
                 showScreen('home');
             } else {
                 showScreen('splash2');
@@ -686,19 +981,18 @@
             e.target.value = val;
             startBtn.disabled = val.length < 2;
             
-            // Generar ID único basado en nombre + random
-            const uniqueId = val.slice(0, 4) + generateId().slice(0, 2);
+            const uniqueId = generateId();
             idPreview.textContent = `ID: ${uniqueId}`;
         });
 
         startBtn.addEventListener('click', () => {
             const username = usernameInput.value;
-            const userId = username.slice(0, 4) + generateId().slice(0, 2);
+            const userId = generateId();
             
             state.user = {
                 id: userId,
                 name: username,
-                timeMs: 72 * 3600000, // 72 horas
+                timeMs: 72 * 3600000,
                 createdAt: Date.now(),
                 friendsMade: 0
             };
@@ -715,20 +1009,19 @@
             const timerEl = document.getElementById('mainTimer');
             const heartEl = document.getElementById('heartBeat');
             
-            document.getElementById('userIdDisplay').textContent = `ID: ${state.user.id}`;
-            document.getElementById('friendsCount').textContent = `${state.friends.length} AMIGOS`;
+            document.getElementById('userNameDisplay').textContent = state.user.name;
+            document.getElementById('friendsCount').textContent = `${state.friends.length} ALIADOS`;
             
-            // Actualizar tiempo
             const timeStr = formatTime(state.user.timeMs);
             timerEl.textContent = timeStr;
             
-            // Colores y pulso
             const hours = state.user.timeMs / 3600000;
             timerEl.classList.remove('danger', 'frozen');
-            heartEl.classList.remove('fast');
+            heartEl.classList.remove('fast', 'slow');
             
             if (state.user.timeMs <= 0) {
                 timerEl.classList.add('frozen');
+                heartEl.classList.add('slow');
                 enterFrozenState();
                 return;
             } else if (hours < 12) {
@@ -736,9 +1029,14 @@
                 heartEl.classList.add('fast');
             }
             
-            // Verificar congelado
-            if (state.frozenState.isFrozen) {
-                showScreen('frozen');
+            // Check inbox
+            const totalInbox = state.inbox.gifts.length + state.inbox.tokes.length;
+            const badge = document.getElementById('inboxBadge');
+            if (totalInbox > 0) {
+                badge.textContent = totalInbox;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
             }
         }
 
@@ -746,6 +1044,9 @@
         setInterval(() => {
             if (state.user && !state.frozenState.isFrozen) {
                 state.user.timeMs = Math.max(0, state.user.timeMs - 1000);
+                state.friends.forEach(f => {
+                    f.timeMs = Math.max(0, f.timeMs - 1000);
+                });
                 state.lastUpdate = Date.now();
                 
                 if (state.user.timeMs <= 0) {
@@ -753,7 +1054,11 @@
                 }
                 
                 const homeActive = document.getElementById('home').classList.contains('active');
+                const friendsActive = document.getElementById('friendsList').classList.contains('active');
+                
                 if (homeActive) updateHome();
+                if (friendsActive) renderFriendsList();
+                
                 saveState();
             }
         }, 1000);
@@ -761,57 +1066,112 @@
         // Botones menu
         document.getElementById('btnMakeFriend').addEventListener('click', () => showScreen('makeFriend'));
         document.getElementById('btnFriends').addEventListener('click', () => showScreen('friendsList'));
-        document.getElementById('btnSendTime').addEventListener('click', () => showScreen('sendTime'));
-        document.getElementById('btnPlay').addEventListener('click', () => showScreen('playTokens'));
+        document.getElementById('btnSendTime').addEventListener('click', () => {
+            checkInbox();
+            showScreen('sendTime');
+        });
+        document.getElementById('btnPlay').addEventListener('click', () => showScreen('playTokes'));
+
+        // ==================== INBOX SYSTEM ====================
+        function checkInbox() {
+            let message = '';
+            let totalTime = 0;
+            
+            // Procesar regalos
+            state.inbox.gifts.forEach(gift => {
+                totalTime += gift.amount;
+                message += `✓ ${gift.fromName} te envió ${formatTime(gift.amount)}<br>`;
+            });
+            
+            // Procesar tokes
+            state.inbox.tokes.forEach(toke => {
+                if (toke.reward > 0) {
+                    totalTime += toke.reward * 3600000;
+                    message += `✓ ${toke.fromName}: "${toke.message}" → +${toke.reward}:00:00<br>`;
+                } else {
+                    message += `✓ ${toke.fromName}: "${toke.message}"<br>`;
+                }
+            });
+            
+            if (totalTime > 0) {
+                state.user.timeMs += totalTime;
+                showPopup('TIEMPO RECIBIDO', message, totalTime);
+                state.inbox.gifts = [];
+                state.inbox.tokes = [];
+                saveState();
+            }
+        }
 
         // ==================== MAKE FRIEND ====================
         function updateMakeFriend() {
             if (!state.user) return;
+            
             document.getElementById('myCode').textContent = state.user.id;
             
-            // Generar QR simple (canvas)
-            const canvas = document.getElementById('qrCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, 200, 200);
-            ctx.fillStyle = 'black';
-            
-            // QR estilizado simple
-            const cellSize = 20;
-            const code = state.user.id;
-            for (let i = 0; i < code.length; i++) {
-                const x = 40 + (i % 3) * 50;
-                const y = 40 + Math.floor(i / 3) * 50;
-                ctx.fillRect(x, y, 40, 40);
-            }
-            ctx.font = '14px Orbitron';
-            ctx.textAlign = 'center';
-            ctx.fillText(state.user.id, 100, 180);
+            // Generar QR
+            const container = document.getElementById('qrContainer');
+            container.innerHTML = '';
+            new QRCode(container, {
+                text: state.user.id,
+                width: 180,
+                height: 180,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
         }
 
-        function addFriend() {
+        function startScanner() {
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode('qrReader');
+            }
+            
+            html5QrCode.start(
+                { facingMode: 'environment' },
+                { fps: 10, qrbox: { width: 200, height: 200 } },
+                (decodedText) => {
+                    html5QrCode.stop();
+                    addFriendByCode(decodedText);
+                },
+                (error) => {}
+            ).catch(err => {
+                showPopup('ERROR', 'No se pudo acceder a la cámara. Usa el código manual.');
+            });
+        }
+
+        function addFriendManual() {
             const code = document.getElementById('friendCodeInput').value.toUpperCase();
+            addFriendByCode(code);
+        }
+
+        function addFriendByCode(code) {
             const msgEl = document.getElementById('addFriendMsg');
             
+            if (!code || code.length !== 6) {
+                msgEl.textContent = 'CÓDIGO INVÁLIDO';
+                msgEl.style.color = 'var(--neon-red)';
+                return;
+            }
+            
             if (code === state.user.id) {
-                msgEl.textContent = "NO PUEDES AÑADIRTE A TI MISMO";
-                msgEl.style.color = "var(--neon-red)";
+                msgEl.textContent = 'NO PUEDES AÑADIRTE A TI MISMO';
+                msgEl.style.color = 'var(--neon-red)';
                 return;
             }
             
             if (state.friends.find(f => f.id === code)) {
-                msgEl.textContent = "YA ES TU AMIGO";
-                msgEl.style.color = "var(--neon-red)";
+                msgEl.textContent = 'YA ES TU ALIADO';
+                msgEl.style.color = 'var(--neon-red)';
                 return;
             }
             
-            // Simular "encontrar" usuario (en MVP, creamos amigo ficticio con tiempo random)
-            const friendTime = (12 + Math.random() * 60) * 3600000; // 12-72h
+            // Simular aliado (en MVP con backend real, validaría contra servidor)
+            const friendTime = (24 + Math.random() * 48) * 3600000;
             const rewardHours = REWARDS[Math.min(state.user.friendsMade, 4)];
             
             const newFriend = {
                 id: code,
-                name: `USER_${code.slice(0, 3)}`,
+                name: `ALIADO_${code.slice(0, 3)}`,
                 timeMs: friendTime,
                 addedAt: Date.now()
             };
@@ -819,27 +1179,21 @@
             state.friends.push(newFriend);
             state.user.friendsMade++;
             
-            // Añadir recompensa
             if (rewardHours > 0) {
                 state.user.timeMs += rewardHours * 3600000;
-                msgEl.textContent = `¡+${rewardHours}H! AMIGO AÑADIDO`;
-                msgEl.style.color = "var(--neon-green)";
+                msgEl.textContent = `¡+${rewardHours}:00:00! ALIADO AÑADIDO`;
+                msgEl.style.color = 'var(--neon-green)';
                 
-                // Flash effect
-                document.body.classList.add('flash-green');
-                setTimeout(() => document.body.classList.remove('flash-green'), 500);
-                
-                // Vibración
-                if (navigator.vibrate) navigator.vibrate(200);
+                showPopup('NUEVO ALIADO', `Conectado con ${newFriend.name}`, rewardHours * 3600000);
             } else {
-                msgEl.textContent = "AMIGO AÑADIDO (SIN RECOMPENSA)";
-                msgEl.style.color = "#888";
+                msgEl.textContent = 'ALIADO AÑADIDO (SIN RECOMPENSA)';
+                msgEl.style.color = '#888';
             }
             
             document.getElementById('friendCodeInput').value = '';
             saveState();
             
-            setTimeout(() => showScreen('home'), 1500);
+            setTimeout(() => showScreen('home'), 2000);
         }
 
         // ==================== FRIENDS LIST ====================
@@ -847,7 +1201,6 @@
             const container = document.getElementById('friendsListContainer');
             container.innerHTML = '';
             
-            // Ordenar por menos tiempo
             const sorted = [...state.friends].sort((a, b) => a.timeMs - b.timeMs);
             
             sorted.forEach(friend => {
@@ -860,23 +1213,23 @@
                 div.innerHTML = `
                     <div>
                         <div class="friend-name">${friend.name}</div>
-                        <div style="font-size: 0.6rem; opacity: 0.5;">${friend.id}</div>
+                        <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 0.05rem;">${friend.id}</div>
                     </div>
-                    <div class="friend-time ${timeClass}">${formatShortTime(friend.timeMs)}</div>
+                    <div class="friend-time ${timeClass}">${formatTime(friend.timeMs)}</div>
                 `;
                 
                 container.appendChild(div);
             });
             
             if (state.friends.length === 0) {
-                container.innerHTML = '<div style="text-align: center; opacity: 0.5; margin-top: 50%;">SIN AMIGOS AÚN</div>';
+                container.innerHTML = '<div style="text-align: center; opacity: 0.5; margin-top: 40%; font-size: 0.8rem; font-weight: 300;">SIN ALIADOS AÚN</div>';
             }
         }
 
         // ==================== SEND TIME ====================
         function updateSendTime() {
             const select = document.getElementById('giftTarget');
-            select.innerHTML = '<option value="">SELECCIONAR AMIGO</option>';
+            select.innerHTML = '<option value="">SELECCIONAR ALIADO</option>';
             
             state.friends.forEach(f => {
                 const option = document.createElement('option');
@@ -885,61 +1238,81 @@
                 select.appendChild(option);
             });
             
-            // Verificar si ya usó regalo hoy
             const canGift = state.dailyActions.giftsSent < 1;
-            document.getElementById('giftStatus').textContent = canGift ? "DISPONIBLE" : "USADO HOY";
-            document.getElementById('giftStatus').style.color = canGift ? "var(--neon-green)" : "#555";
+            document.getElementById('giftStatus').textContent = canGift ? 'DISPONIBLE' : 'YA USADO HOY';
+            document.getElementById('giftStatus').style.color = canGift ? 'var(--neon-green)' : '#555';
             document.getElementById('sendGiftBtn').disabled = !canGift;
         }
 
         function sendGift() {
             const targetId = document.getElementById('giftTarget').value;
-            if (!targetId) return;
-            
-            if (state.dailyActions.giftsSent >= 1) {
-                alert("YA ENVIASTE REGALO HOY");
+            if (!targetId) {
+                showPopup('ERROR', 'Selecciona un aliado');
                 return;
             }
             
-            // En MVP, simulamos que le damos tiempo al amigo (en realidad no persistimos su lado)
-            const friend = state.friends.find(f => f.id === targetId);
-            if (friend) {
-                friend.timeMs += 3600000; // +1h al amigo
-                
-                state.dailyActions.giftsSent = 1;
-                state.dailyActions.lastReset = Date.now();
-                
-                // Feedback
-                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                
-                alert(`+1:00:00 ENVIADO A ${friend.name}`);
-                saveState();
-                showScreen('home');
+            if (state.dailyActions.giftsSent >= 1) {
+                showPopup('LÍMITE ALCANZADO', 'Ya enviaste un regalo hoy. Vuelve mañana.');
+                return;
             }
+            
+            const friend = state.friends.find(f => f.id === targetId);
+            if (!friend) return;
+            
+            // Añadir a "inbox" del amigo (simulado - en backend real sería push al servidor)
+            // Aquí simulamos que el amigo recibe guardando en su localStorage cuando se conecte
+            const giftData = {
+                fromId: state.user.id,
+                fromName: state.user.name,
+                amount: 3600000,
+                timestamp: Date.now()
+            };
+            
+            // Simular recepción inmediata para demo (en realidad iría a servidor)
+            friend.timeMs += 3600000;
+            
+            state.dailyActions.giftsSent = 1;
+            saveState();
+            
+            showPopup('REGALO ENVIADO', `Enviaste 1:00:00 a ${friend.name}`, 0);
+            
+            setTimeout(() => showScreen('home'), 2000);
         }
 
-        // ==================== PLAY TOKENS ====================
-        function renderTokens() {
-            const container = document.getElementById('tokensContainer');
+        // ==================== PLAY TOKES ====================
+        function renderTokes() {
+            const container = document.getElementById('tokesContainer');
             container.innerHTML = '';
             
-            const remaining = 5 - state.dailyActions.tokensUsed;
-            document.getElementById('tokensLeft').textContent = `${remaining} restantes${remaining === 0 ? ' - BONUS DESBLOQUEADO' : ''}`;
+            // Actualizar selector de aliados
+            const select = document.getElementById('tokeTarget');
+            select.innerHTML = '<option value="">SELECCIONAR ALIADO</option>';
+            state.friends.forEach(f => {
+                const used = state.dailyActions.usedFriends.includes(f.id);
+                const option = document.createElement('option');
+                option.value = f.id;
+                option.textContent = `${f.name}${used ? ' (YA USADO)' : ''}`;
+                if (used) option.disabled = true;
+                select.appendChild(option);
+            });
             
-            TOKEN_MESSAGES.forEach((token, idx) => {
+            const remaining = 5 - state.dailyActions.tokesUsed;
+            document.getElementById('tokesLeft').textContent = `${remaining} restantes${remaining === 0 ? ' - BONUS DESBLOQUEADO' : ''}`;
+            
+            TOKE_MESSAGES.forEach((toke, idx) => {
                 const btn = document.createElement('button');
-                btn.className = 'token-btn';
+                btn.className = 'toke-btn';
                 
-                const used = state.dailyActions.tokensUsed > idx;
+                const used = state.dailyActions.tokesUsed > idx;
                 if (used) btn.classList.add('used');
                 
                 btn.innerHTML = `
-                    <div style="font-weight: 500; margin-bottom: 4px;">${token.text}</div>
-                    <div style="font-size: 0.6rem; opacity: 0.6;">${token.emoji}</div>
-                    ${token.type === 'life' && !used ? '<span class="token-reward">+TIME</span>' : ''}
+                    <div style="font-weight: 400; margin-bottom: 3px;">${toke.text}</div>
+                    <div style="font-size: 0.6rem; opacity: 0.6;">${toke.emoji}</div>
+                    ${toke.reward > 0 && !used ? `<span class="toke-reward">+${toke.reward}:00</span>` : ''}
                 `;
                 
-                btn.onclick = () => useToken(idx);
+                btn.onclick = () => sendToke(idx);
                 container.appendChild(btn);
             });
             
@@ -950,32 +1323,50 @@
                 saveState();
                 
                 setTimeout(() => {
-                    alert("¡BONUS! +6:00:00 POR USAR 5 TOKENS");
-                    if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+                    showPopup('BONUS DESBLOQUEADO', '¡Usaste 5 tokes! +6:00:00', 6 * 3600000);
                 }, 500);
             }
         }
 
-        function useToken(index) {
-            if (state.dailyActions.tokensUsed >= 5) {
-                alert("YA USASTE 5 TOKENS HOY");
+        function sendToke(index) {
+            const targetId = document.getElementById('tokeTarget').value;
+            
+            if (!targetId) {
+                showPopup('SELECCIONA ALIADO', 'Primero elige a quién enviar el toke');
                 return;
             }
             
-            // Verificar que no repita amigo (simplificado: solo contamos uso)
-            state.dailyActions.tokensUsed++;
-            
-            const token = TOKEN_MESSAGES[index];
-            
-            if (token.type === 'life') {
-                state.user.timeMs += 2 * 3600000; // +2h por "pásame vida"
-                if (navigator.vibrate) navigator.vibrate(300);
-                document.body.classList.add('flash-green');
-                setTimeout(() => document.body.classList.remove('flash-green'), 500);
+            if (state.dailyActions.tokesUsed >= 5) {
+                showPopup('LÍMITE ALCANZADO', 'Ya usaste tus 5 tokes de hoy');
+                return;
             }
             
+            if (state.dailyActions.usedFriends.includes(targetId)) {
+                showPopup('ALIADO YA USADO', 'Solo puedes enviar 1 toke por aliado al día');
+                return;
+            }
+            
+            const toke = TOKE_MESSAGES[index];
+            const friend = state.friends.find(f => f.id === targetId);
+            
+            // Aplicar efecto
+            let receivedMsg = '';
+            if (toke.reward > 0) {
+                state.user.timeMs += toke.reward * 3600000;
+                receivedMsg = `Recibiste +${toke.reward}:00:00`;
+            }
+            
+            state.dailyActions.tokesUsed++;
+            state.dailyActions.usedFriends.push(targetId);
+            
+            // Simular recepción en amigo
+            friend.timeMs += 0.5 * 3600000; // El amigo también gana un poco
+            
             saveState();
-            renderTokens();
+            
+            showPopup('TOKE ENVIADO', `Enviaste a ${friend.name}:<br>"${toke.text}"<br><br>${receivedMsg}`, toke.reward * 3600000);
+            
+            renderTokes();
         }
 
         // ==================== CONGELADO ====================
@@ -996,30 +1387,32 @@
             const frozenTime = Date.now() - state.frozenState.frozenAt;
             const hoursFrozen = Math.floor(frozenTime / 3600000);
             
-            // Calcular resurrección
             const resurrectTime = Math.max(0, (48 * 3600000) - frozenTime);
             document.getElementById('resurrectTimer').textContent = formatTime(resurrectTime);
             
-            // Pérdida de amigos progresiva
             let friendsLost = 0;
-            let infoText = "";
+            let infoText = '';
             
             if (hoursFrozen < 24) {
                 friendsLost = 0;
-                infoText = "DÍA 1: Pronto perderás 2 amigos<br>Espera 48h para resucitar con 12:00:00";
+                infoText = `DÍA 1: Pronto perderás 2 aliados<br>Espera ${formatTime(resurrectTime)} para resucitar con 12:00:00`;
             } else if (hoursFrozen < 48) {
                 friendsLost = 2;
-                infoText = "DÍA 2: Has perdido 2 amigos<br>Pronto perderás 3 más<br>Espera 48h para resucitar con 12:00:00";
+                infoText = `DÍA 2: Perdiste 2 aliados<br>Pronto perderás el resto<br>Espera ${formatTime(resurrectTime)} para resucitar`;
             } else {
-                // Resurrección disponible
                 resurrectNow();
                 return;
             }
             
-            // Aplicar pérdida si no se ha aplicado
-            if (state.friends.length > 0 && friendsLost > 0 && state.frozenState.dayCount !== Math.floor(hoursFrozen / 24)) {
-                state.frozenState.dayCount = Math.floor(hoursFrozen / 24);
-                state.friends = state.friends.slice(0, Math.max(0, state.friends.length - friendsLost));
+            // Aplicar pérdida progresiva
+            const currentDay = Math.floor(hoursFrozen / 24);
+            if (currentDay > state.frozenState.dayCount && state.friends.length > 0) {
+                state.frozenState.dayCount = currentDay;
+                if (currentDay === 1) {
+                    state.friends = state.friends.slice(0, Math.max(0, state.friends.length - 2));
+                } else if (currentDay === 2) {
+                    state.friends = [];
+                }
                 saveState();
             }
             
@@ -1029,13 +1422,20 @@
         function resurrectNow() {
             state.frozenState.isFrozen = false;
             state.frozenState.frozenAt = null;
-            state.user.timeMs = 12 * 3600000; // 12h
-            state.friends = []; // 0 amigos
-            state.dailyActions = { giftsSent: 0, tokensUsed: 0, lastReset: Date.now(), friendsMadeToday: 0 };
+            state.user.timeMs = 12 * 3600000;
+            state.friends = [];
+            state.dailyActions = {
+                giftsSent: 0,
+                tokesUsed: 0,
+                lastReset: Date.now(),
+                gotBonus: false,
+                usedFriends: []
+            };
             
             saveState();
-            alert("HAS RESUCITADO CON 12:00:00");
-            showScreen('home');
+            showPopup('RESURRECCIÓN', 'Has vuelto con 12:00:00<br>0 aliados<br>Empieza de nuevo', 12 * 3600000);
+            
+            setTimeout(() => showScreen('home'), 3000);
         }
 
         // ==================== INICIALIZACIÓN ====================
@@ -1049,10 +1449,8 @@
                     showScreen('home');
                 }
             }
-            // Si no hay datos, se queda en Splash 1 por defecto
         }
 
-        // Reset diario de acciones
         function checkDailyReset() {
             if (!state.user) return;
             
@@ -1062,8 +1460,8 @@
             
             if (hoursSinceReset >= 24) {
                 state.dailyActions.giftsSent = 0;
-                state.dailyActions.tokensUsed = 0;
-                state.dailyActions.friendsMadeToday = 0;
+                state.dailyActions.tokesUsed = 0;
+                state.dailyActions.usedFriends = [];
                 state.dailyActions.gotBonus = false;
                 state.dailyActions.lastReset = now;
                 saveState();
@@ -1073,17 +1471,17 @@
         // Iniciar
         init();
         checkDailyReset();
-        
-        // Verificar reset diario cada hora
         setInterval(checkDailyReset, 3600000);
         
-        // Guardar estado antes de cerrar
         window.addEventListener('beforeunload', saveState);
         
-        // Prevenir zoom en móviles
-        document.addEventListener('gesturestart', function (e) {
-            e.preventDefault();
-        });
+        // Prevenir zoom
+        document.addEventListener('gesturestart', (e) => e.preventDefault());
+        
+        // Activar audio en primera interacción
+        document.addEventListener('click', () => {
+            if (!audioContext) initAudio();
+        }, { once: true });
     </script>
 </body>
 </html>
