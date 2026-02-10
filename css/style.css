@@ -20,6 +20,7 @@ body {
     height: 100%;
     display: none;
     background: #000;
+    cursor: pointer;
 }
 
 .screen.active {
@@ -29,46 +30,46 @@ body {
     align-items: center;
 }
 
-/* SPLASH 1 */
+/* SPLASH 1 - IS TIME MÁS GRANDE */
 #splash1 {
-    cursor: pointer;
+    position: relative;
 }
 
-.splash-main {
+.splash-content {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    padding: 20px;
+    gap: 3rem;
+    pointer-events: auto;
 }
 
 .logo-main {
-    font-size: 3.5rem;
-    font-weight: 400; /* FINA */
-    letter-spacing: 1.2rem;
+    font-size: 5rem; /* MÁS GRANDE */
+    font-weight: 400;
+    letter-spacing: 1.5rem;
     color: #00ff41;
-    text-shadow: 0 0 30px #00ff41;
+    text-shadow: 0 0 40px #00ff41, 0 0 80px rgba(0,255,65,0.5);
 }
 
 .timer-countdown {
-    font-size: 2rem;
-    font-weight: 400; /* FINA */
-    letter-spacing: 0.4rem;
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: 0.5rem;
     color: #00ff41;
-    text-shadow: 0 0 15px #00ff41;
+    text-shadow: 0 0 20px #00ff41;
     font-variant-numeric: tabular-nums;
 }
 
 .click-hint {
     position: absolute;
-    bottom: 12%;
-    font-size: 0.7rem;
+    bottom: 10%;
+    font-size: 0.75rem;
     font-weight: 400;
-    letter-spacing: 0.2rem;
-    opacity: 0.4;
+    letter-spacing: 0.25rem;
+    opacity: 0.35;
     animation: blink 2s infinite;
+    pointer-events: none;
 }
 
 @keyframes blink {
@@ -76,31 +77,32 @@ body {
     50% { opacity: 0.5; }
 }
 
-/* SPLASH 2 */
+/* SPLASH 2 - FRASES MÁS GRANDES */
 #splash2 {
-    cursor: pointer;
-    background: #000;
+    position: relative;
 }
 
-.rules-main {
+.rules-content {
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 3rem;
-    padding: 20px;
+    gap: 4rem;
+    padding: 30px;
+    pointer-events: auto;
 }
 
 .rule-line {
-    font-size: 1rem;
-    font-weight: 400; /* FINA */
-    letter-spacing: 0.25rem;
+    font-size: 1.4rem; /* MÁS GRANDE */
+    font-weight: 400;
+    letter-spacing: 0.3rem;
     color: #00ff41;
-    text-shadow: 0 0 10px #00ff41;
+    text-shadow: 0 0 15px #00ff41;
     opacity: 0;
+    line-height: 1.5;
 }
 
 .rule-line.show {
-    animation: pulseIn 1.2s forwards;
+    animation: pulseIn 1.5s forwards;
 }
 
 @keyframes pulseIn {
@@ -111,46 +113,47 @@ body {
     }
     50% { 
         opacity: 1; 
-        transform: scale(1.02);
-        text-shadow: 0 0 30px #00ff41, 0 0 60px #00ff41;
+        transform: scale(1.05);
+        text-shadow: 0 0 40px #00ff41, 0 0 80px rgba(0,255,65,0.8);
     }
     100% { 
         opacity: 1; 
         transform: scale(1);
-        text-shadow: 0 0 15px #00ff41;
+        text-shadow: 0 0 20px #00ff41;
     }
 }
 
 /* HOME */
 #home {
     justify-content: flex-start;
-    padding-top: 12vh;
+    padding-top: 10vh;
+    cursor: default;
 }
 
 .user-id {
     position: absolute;
     top: 3vh;
     right: 5vw;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 400;
     opacity: 0.5;
-    letter-spacing: 0.15rem;
+    letter-spacing: 0.2rem;
 }
 
 .timer-main {
-    font-size: 3.5rem;
-    font-weight: 400; /* FINA */
-    letter-spacing: 0.25rem;
+    font-size: 4rem;
+    font-weight: 400;
+    letter-spacing: 0.3rem;
     color: #00ff41;
-    text-shadow: 0 0 30px #00ff41;
+    text-shadow: 0 0 40px #00ff41;
     font-variant-numeric: tabular-nums;
     margin-bottom: 3vh;
 }
 
 .pulse-heart {
-    font-size: 1.8rem;
+    font-size: 2rem;
     color: #ff0040;
-    text-shadow: 0 0 15px #ff0040;
+    text-shadow: 0 0 20px #ff0040;
     margin-bottom: 6vh;
     animation: heartbeat 1.2s infinite;
 }
@@ -164,34 +167,35 @@ body {
 .menu-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 15px;
     width: 85%;
-    max-width: 380px;
+    max-width: 400px;
 }
 
 .menu-btn {
-    padding: 25px 15px;
+    padding: 28px 20px;
     background: rgba(0,255,65,0.05);
     border: 1px solid rgba(0,255,65,0.25);
     color: #00ff41;
     font-family: 'Orbitron', monospace;
-    font-size: 0.9rem;
-    font-weight: 400; /* FINA */
-    letter-spacing: 0.15rem;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.2rem;
     cursor: pointer;
     transition: all 0.3s;
+    pointer-events: auto;
 }
 
 .menu-btn:hover {
     background: rgba(0,255,65,0.12);
     border-color: #00ff41;
-    box-shadow: 0 0 20px rgba(0,255,65,0.25);
+    box-shadow: 0 0 25px rgba(0,255,65,0.3);
 }
 
 /* Responsive */
 @media (max-width: 400px) {
-    .logo-main { font-size: 2.5rem; letter-spacing: 0.8rem; }
-    .timer-countdown { font-size: 1.6rem; letter-spacing: 0.3rem; }
-    .timer-main { font-size: 2.8rem; }
-    .rule-line { font-size: 0.85rem; letter-spacing: 0.15rem; }
+    .logo-main { font-size: 3.5rem; letter-spacing: 1rem; }
+    .timer-countdown { font-size: 1.8rem; }
+    .rule-line { font-size: 1.1rem; letter-spacing: 0.2rem; gap: 3rem; }
+    .timer-main { font-size: 3rem; }
 }
