@@ -64,6 +64,14 @@
             text-align: center;
         }
 
+        .logo-small {
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 0.4rem;
+            opacity: 0.6;
+            margin-top: 2vh;
+        }
+
         .timer-display {
             font-size: 3.2rem;
             font-weight: 400;
@@ -180,9 +188,23 @@
             color: #555;
         }
 
+        .btn-audio {
+            position: absolute;
+            bottom: 8%;
+            background: transparent;
+            border: 1px solid rgba(0, 255, 65, 0.4);
+            color: var(--neon-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            padding: 15px 30px;
+            cursor: pointer;
+            letter-spacing: 0.15rem;
+            opacity: 0.8;
+        }
+
         #home {
             justify-content: flex-start;
-            padding-top: 6vh;
+            padding-top: 10vh;
         }
 
         .top-bar {
@@ -200,6 +222,13 @@
         .user-name-display {
             font-weight: 500;
             color: var(--neon-green);
+        }
+
+        .audio-toggle {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            font-size: 0.9rem;
         }
 
         .heart-container {
@@ -231,7 +260,7 @@
             gap: 12px;
             width: 85%;
             max-width: 340px;
-            margin-top: 4vh;
+            margin-top: 5vh;
         }
 
         .menu-btn {
@@ -279,40 +308,66 @@
             font-weight: 300;
         }
 
-        .qr-section {
-            margin-top: 8vh;
-            text-align: center;
-            width: 100%;
+        /* Make Friend - Organizado */
+        #makeFriend {
+            justify-content: flex-start;
+            padding-top: 8vh;
         }
 
-        .qr-label {
+        .friend-section {
+            width: 90%;
+            max-width: 360px;
+            margin: 3vh 0;
+            text-align: center;
+        }
+
+        .section-label {
             font-size: 0.7rem;
+            letter-spacing: 0.2rem;
             opacity: 0.5;
-            letter-spacing: 0.15rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5vh;
             text-transform: uppercase;
+        }
+
+        .separator {
+            width: 60%;
+            height: 1px;
+            background: rgba(0, 255, 65, 0.15);
+            margin: 3vh auto;
         }
 
         .qr-box {
             background: white;
-            padding: 15px;
+            padding: 12px;
             display: inline-block;
             border-radius: 8px;
-            margin: 1rem 0;
+            margin: 1vh 0;
         }
 
         .code-text {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 700;
             letter-spacing: 0.3rem;
-            margin-top: 0.5rem;
+            margin-top: 1vh;
             color: var(--neon-green);
+        }
+
+        .scanner-btn {
+            background: rgba(0, 255, 65, 0.08);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            padding: 20px 40px;
+            cursor: pointer;
+            letter-spacing: 0.15rem;
+            margin: 1vh 0;
         }
 
         .scanner-container {
             width: 260px;
             height: 260px;
-            margin: 1.5rem auto;
+            margin: 2vh auto;
             border: 2px solid var(--neon-green);
             position: relative;
             overflow: hidden;
@@ -334,11 +389,32 @@
             100% { transform: translateY(100%); }
         }
 
-        .manual-input {
-            margin-top: 1.5rem;
-            width: 80%;
+        .manual-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1vh;
         }
 
+        .manual-input {
+            width: 180px;
+            margin: 0;
+        }
+
+        .manual-btn {
+            padding: 18px 25px;
+            margin: 0;
+            font-size: 0.7rem;
+        }
+
+        .add-msg {
+            font-size: 0.75rem;
+            margin-top: 2vh;
+            height: 1.5rem;
+        }
+
+        /* Friends List */
         .friends-list-container {
             width: 88%;
             max-width: 360px;
@@ -377,6 +453,7 @@
             color: var(--neon-red);
         }
 
+        /* Action Screens */
         .action-section {
             margin-top: 15vh;
             text-align: center;
@@ -386,38 +463,103 @@
         .action-info {
             font-size: 0.75rem;
             opacity: 0.6;
-            margin-bottom: 2rem;
+            margin-bottom: 3vh;
             line-height: 1.6;
         }
 
-        .friend-select {
-            background: transparent;
-            border: 1px solid rgba(0, 255, 65, 0.3);
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 0.9rem;
-            padding: 15px;
+        /* Selector Futurista Custom */
+        .custom-select-container {
+            position: relative;
             width: 100%;
-            margin-bottom: 2rem;
-            outline: none;
+            margin-bottom: 3vh;
         }
 
-        .friend-select option {
+        .custom-select-trigger {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            padding: 18px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            letter-spacing: 0.05rem;
+        }
+
+        .custom-select-trigger::after {
+            content: '▼';
+            font-size: 0.6rem;
+            opacity: 0.6;
+        }
+
+        .custom-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
             background: #000;
-            color: var(--neon-green);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-top: none;
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
         }
 
+        .custom-options.open {
+            display: block;
+        }
+
+        .custom-option {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.1);
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .custom-option:hover, .custom-option.selected {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+
+        .option-name {
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .option-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .no-friends-msg {
+            padding: 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        .no-friends-btn {
+            margin-top: 15px;
+            padding: 12px 25px;
+            font-size: 0.7rem;
+        }
+
+        /* Tokes */
         .tokes-grid {
             width: 85%;
             max-width: 360px;
-            margin-top: 10vh;
+            margin-top: 3vh;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
         .toke-btn {
-            background: var(--glass);
+            background: rgba(0, 255, 65, 0.03);
             border: 1px solid rgba(0, 255, 65, 0.2);
             color: var(--neon-green);
             font-family: 'Orbitron', monospace;
@@ -432,18 +574,19 @@
         }
 
         .toke-btn:active {
-            background: rgba(0, 255, 65, 0.15);
+            background: rgba(0, 255, 65, 0.12);
         }
 
         .toke-btn.used {
-            opacity: 0.25;
+            opacity: 0.2;
             border-color: #333;
             pointer-events: none;
         }
 
         .toke-btn.selected {
             border-color: var(--neon-green);
-            background: rgba(0, 255, 65, 0.1);
+            background: rgba(0, 255, 65, 0.15);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
         }
 
         .toke-reward {
@@ -451,11 +594,12 @@
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: var(--neon-green);
             font-weight: 500;
         }
 
+        /* Frozen */
         .frozen-screen {
             color: #555;
         }
@@ -476,14 +620,14 @@
             opacity: 0.6;
         }
 
-        /* Popup/Modal */
+        /* Popup */
         .popup-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             display: none;
             justify-content: center;
             align-items: center;
@@ -577,7 +721,7 @@
 </head>
 <body>
 
-    <!-- Popup Modal -->
+    <!-- Popup -->
     <div class="popup-overlay" id="popup">
         <div class="popup-content">
             <div class="popup-title" id="popupTitle">NOTIFICACIÓN</div>
@@ -594,12 +738,12 @@
         <div class="hint-text">TOCAR PARA CONTINUAR</div>
     </div>
 
-    <!-- 2. SPLASH 2 (Reglas) -->
+    <!-- 2. SPLASH 2 -->
     <div id="splash2" class="screen">
         <div class="rule-line" id="rule1">TU TIEMPO DEFINE TU EXISTENCIA</div>
         <div class="rule-line" id="rule2">GANA TIEMPO CON PERSONAS REALES</div>
         <div class="rule-line" id="rule3">CUANDO LLEGAS A CERO, DESAPARECES</div>
-        <div class="hint-text" id="splash2Hint" style="display:none;">TOCAR PARA INICIAR</div>
+        <button class="btn-audio" id="btnAudio" onclick="activateAudio()">ACTIVAR SONIDO 🔇</button>
     </div>
 
     <!-- 3. REGISTRO -->
@@ -608,19 +752,18 @@
         <input type="text" class="input-field" id="usernameInput" placeholder="TU NOMBRE" maxlength="12">
         <div class="code-text" id="idPreview" style="font-size: 1rem; opacity: 0.5;">ID: ----</div>
         <button class="btn-primary" id="startBtn" disabled>INICIAR</button>
-        <div style="position: absolute; bottom: 10%; font-size: 0.6rem; opacity: 0.4; text-align: center;">
-            RECIBIRÁS 72:00:00 PARA COMENZAR
-        </div>
     </div>
 
     <!-- 4. HOME -->
     <div id="home" class="screen">
         <div class="top-bar">
             <span class="user-name-display" id="userNameDisplay">----</span>
-            <span id="friendsCount">0 ALIADOS</span>
+            <span class="audio-toggle" id="audioToggle" onclick="toggleAudio()">🔇</span>
         </div>
         
         <div class="timer-display" id="mainTimer">72:00:00</div>
+        <div style="font-size: 0.8rem; opacity: 0.5; margin-top: 1vh; letter-spacing: 0.1rem;" id="friendsCount">0 ALIADOS</div>
+        
         <div class="heart-container" id="heartBeat">♥</div>
         
         <div class="menu-grid">
@@ -632,6 +775,8 @@
             </button>
             <button class="menu-btn" id="btnPlay">PLAY<br>TOKES</button>
         </div>
+
+        <div class="logo-small">IS TIME</div>
     </div>
 
     <!-- 5. MAKE FRIEND -->
@@ -639,26 +784,35 @@
         <div class="back-btn" onclick="showScreen('home')">← VOLVER</div>
         <div class="screen-header">CONEXIÓN</div>
         
-        <div class="qr-section">
-            <div class="qr-label">TU CÓDIGO - ESCANEA PARA CONECTAR</div>
+        <!-- Sección 1: Tu Código -->
+        <div class="friend-section">
+            <div class="section-label">Tu Código - Escanea para Conectar</div>
             <div class="qr-box" id="qrContainer"></div>
             <div class="code-text" id="myCode">------</div>
         </div>
 
-        <div style="margin-top: 2rem; text-align: center; width: 100%;">
-            <div class="qr-label">ESCANEAR ALIADO</div>
-            <div class="scanner-container" id="scannerContainer">
+        <div class="separator"></div>
+
+        <!-- Sección 2: Escanear -->
+        <div class="friend-section">
+            <div class="section-label">Escanear Aliado</div>
+            <button class="scanner-btn" onclick="toggleScanner()" id="scannerBtn">ABRIR CÁMARA</button>
+            <div class="scanner-container hidden" id="scannerWrapper">
                 <div class="scanner-overlay"></div>
                 <div id="qrReader" style="width: 100%; height: 100%;"></div>
             </div>
-            <button class="btn-primary" onclick="startScanner()" style="margin-top: 0.5rem; padding: 12px 30px; font-size: 0.7rem;">INICIAR CÁMARA</button>
         </div>
 
-        <div class="manual-input">
-            <div class="qr-label">O INTRODUCE CÓDIGO MANUAL</div>
-            <input type="text" class="input-field" id="friendCodeInput" placeholder="CÓDIGO 6 DIG" maxlength="6">
-            <button class="btn-primary" onclick="addFriendManual()" style="margin-top: 1rem;">CONECTAR</button>
-            <div id="addFriendMsg" style="font-size: 0.7rem; margin-top: 1rem; height: 1rem;"></div>
+        <div class="separator"></div>
+
+        <!-- Sección 3: Manual -->
+        <div class="friend-section">
+            <div class="section-label">Código Manual</div>
+            <div class="manual-row">
+                <input type="text" class="input-field manual-input" id="friendCodeInput" placeholder="ABC123" maxlength="6">
+                <button class="btn-primary manual-btn" onclick="addFriendManual()">OK</button>
+            </div>
+            <div class="add-msg" id="addFriendMsg"></div>
         </div>
     </div>
 
@@ -680,11 +834,14 @@
                 <span id="giftStatus" style="color: var(--neon-green);">DISPONIBLE</span>
             </div>
             
-            <select class="friend-select" id="giftTarget">
-                <option value="">SELECCIONAR ALIADO</option>
-            </select>
+            <div class="custom-select-container" id="giftSelectContainer">
+                <div class="custom-select-trigger" onclick="toggleGiftSelect()">
+                    <span id="giftTriggerText">SELECCIONAR ALIADO</span>
+                </div>
+                <div class="custom-options" id="giftOptions"></div>
+            </div>
             
-            <button class="btn-primary" id="sendGiftBtn" onclick="sendGift()">ENVIAR TIEMPO</button>
+            <button class="btn-primary" id="sendGiftBtn" onclick="sendGift()" disabled>ENVIAR TIEMPO</button>
         </div>
     </div>
 
@@ -693,16 +850,19 @@
         <div class="back-btn" onclick="showScreen('home')">← VOLVER</div>
         <div class="screen-header">TOKES</div>
         
-        <div class="action-section" style="margin-top: 8vh;">
+        <div class="action-section" style="margin-top: 10vh;">
             <div class="action-info" style="font-size: 0.7rem;">
                 5 TOKES/DÍA A 5 ALIADOS DISTINTOS<br>
                 USA LOS 5 → +6:00:00 BONUS<br>
                 <span id="tokesLeft" style="color: var(--neon-green);">5 restantes</span>
             </div>
             
-            <select class="friend-select" id="tokeTarget" style="margin-bottom: 1.5rem;">
-                <option value="">SELECCIONAR ALIADO</option>
-            </select>
+            <div class="custom-select-container" id="tokeSelectContainer" style="margin-bottom: 2vh;">
+                <div class="custom-select-trigger" onclick="toggleTokeSelect()">
+                    <span id="tokeTriggerText">SELECCIONAR ALIADO</span>
+                </div>
+                <div class="custom-options" id="tokeOptions"></div>
+            </div>
         </div>
 
         <div class="tokes-grid" id="tokesContainer"></div>
@@ -720,7 +880,7 @@
     </div>
 
     <script>
-        // ==================== ESTADO GLOBAL ====================
+        // ==================== ESTADO ====================
         const state = {
             user: null,
             friends: [],
@@ -737,10 +897,8 @@
                 frozenAt: null,
                 dayCount: 0
             },
-            inbox: {
-                gifts: [],
-                tokes: []
-            }
+            inbox: { gifts: [], tokes: [] },
+            audioEnabled: false
         };
 
         const REWARDS = [24, 24, 12, 6, 0];
@@ -754,62 +912,84 @@
 
         let html5QrCode = null;
         let audioContext = null;
-        let heartbeatOscillator = null;
-        let heartbeatGain = null;
         let heartbeatInterval = null;
+        let selectedGiftFriend = null;
+        let selectedTokeFriend = null;
 
-        // ==================== AUDIO - CORAZÓN LATIENDO ====================
+        // ==================== AUDIO ====================
         function initAudio() {
             if (audioContext) return;
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
 
+        function activateAudio() {
+            initAudio();
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            state.audioEnabled = true;
+            document.getElementById('btnAudio').textContent = 'SONIDO ACTIVADO 🔊';
+            document.getElementById('btnAudio').style.borderColor = 'var(--neon-green)';
+            
+            setTimeout(() => {
+                showScreen('register');
+            }, 500);
+        }
+
+        function toggleAudio() {
+            if (!audioContext) {
+                initAudio();
+                audioContext.resume();
+            }
+            state.audioEnabled = !state.audioEnabled;
+            updateAudioIcon();
+            updateHeartbeat();
+        }
+
+        function updateAudioIcon() {
+            const icon = document.getElementById('audioToggle');
+            icon.textContent = state.audioEnabled ? '🔊' : '🔇';
+        }
+
         function playHeartbeat() {
-            if (!audioContext) initAudio();
-            if (heartbeatOscillator) return;
+            if (!state.audioEnabled || !audioContext) return;
+            stopHeartbeat();
             
             const hours = state.user ? state.user.timeMs / 3600000 : 72;
             let bpm = 60;
-            let volume = 0.3;
-            
-            if (state.frozenState.isFrozen) {
-                bpm = 30;
-                volume = 0.1;
-            } else if (hours < 12) {
-                bpm = 120;
-                volume = 0.5;
-            }
+            if (state.frozenState.isFrozen) bpm = 30;
+            else if (hours < 12) bpm = 120;
             
             const interval = 60000 / bpm;
             
             heartbeatInterval = setInterval(() => {
-                if (!audioContext) return;
+                if (!state.audioEnabled || !audioContext) return;
                 
-                // "Lub"
+                const now = audioContext.currentTime;
+                
+                // Lub
                 const osc1 = audioContext.createOscillator();
                 const gain1 = audioContext.createGain();
-                osc1.frequency.value = 80;
+                osc1.frequency.setValueAtTime(80, now);
                 osc1.type = 'sine';
-                gain1.gain.setValueAtTime(volume, audioContext.currentTime);
-                gain1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                gain1.gain.setValueAtTime(0.3, now);
+                gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
                 osc1.connect(gain1);
                 gain1.connect(audioContext.destination);
-                osc1.start();
-                osc1.stop(audioContext.currentTime + 0.1);
+                osc1.start(now);
+                osc1.stop(now + 0.1);
                 
-                // "Dub" (100ms después)
-                setTimeout(() => {
-                    const osc2 = audioContext.createOscillator();
-                    const gain2 = audioContext.createGain();
-                    osc2.frequency.value = 60;
-                    osc2.type = 'sine';
-                    gain2.gain.setValueAtTime(volume * 0.8, audioContext.currentTime);
-                    gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
-                    osc2.connect(gain2);
-                    gain2.connect(audioContext.destination);
-                    osc2.start();
-                    osc2.stop(audioContext.currentTime + 0.08);
-                }, 100);
+                // Dub
+                const osc2 = audioContext.createOscillator();
+                const gain2 = audioContext.createGain();
+                osc2.frequency.setValueAtTime(60, now + 0.12);
+                osc2.type = 'sine';
+                gain2.gain.setValueAtTime(0.25, now + 0.12);
+                gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc2.connect(gain2);
+                gain2.connect(audioContext.destination);
+                osc2.start(now + 0.12);
+                osc2.stop(now + 0.2);
                 
             }, interval);
         }
@@ -823,11 +1003,10 @@
 
         function updateHeartbeat() {
             stopHeartbeat();
-            const homeActive = document.getElementById('home').classList.contains('active');
-            const frozenActive = document.getElementById('frozen').classList.contains('active');
-            
-            if (homeActive || frozenActive) {
-                playHeartbeat();
+            if (state.audioEnabled) {
+                const homeActive = document.getElementById('home').classList.contains('active');
+                const frozenActive = document.getElementById('frozen').classList.contains('active');
+                if (homeActive || frozenActive) playHeartbeat();
             }
         }
 
@@ -835,24 +1014,22 @@
         function generateId() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
             let id = '';
-            for (let i = 0; i < 6; i++) {
-                id += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
+            for (let i = 0; i < 6; i++) id += chars.charAt(Math.floor(Math.random() * chars.length));
             return id;
         }
 
         function formatTime(ms) {
             if (ms <= 0) return "00:00:00";
-            const hours = Math.floor(ms / 3600000);
-            const minutes = Math.floor((ms % 3600000) / 60000);
-            const seconds = Math.floor((ms % 60000) / 1000);
-            return `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+            const h = Math.floor(ms / 3600000);
+            const m = Math.floor((ms % 3600000) / 60000);
+            const s = Math.floor((ms % 60000) / 1000);
+            return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         }
 
         function formatShortTime(ms) {
-            const hours = Math.floor(ms / 3600000);
-            const minutes = Math.floor((ms % 3600000) / 60000);
-            return `${hours}h ${minutes}m`;
+            const h = Math.floor(ms / 3600000);
+            const m = Math.floor((ms % 3600000) / 60000);
+            return `${h}h ${m}m`;
         }
 
         function saveState() {
@@ -863,35 +1040,28 @@
         function loadState() {
             const saved = localStorage.getItem('istime_data');
             if (saved) {
-                const parsed = JSON.parse(saved);
-                Object.assign(state, parsed);
-                
+                Object.assign(state, JSON.parse(saved));
                 const now = Date.now();
                 const elapsed = now - state.lastUpdate;
                 
                 if (state.user && !state.frozenState.isFrozen) {
                     state.user.timeMs = Math.max(0, state.user.timeMs - elapsed);
-                    state.friends.forEach(f => {
-                        f.timeMs = Math.max(0, f.timeMs - elapsed);
-                    });
+                    state.friends.forEach(f => f.timeMs = Math.max(0, f.timeMs - elapsed));
                 }
-                
                 state.lastUpdate = now;
                 
                 if (state.user && state.user.timeMs <= 0 && !state.frozenState.isFrozen) {
                     enterFrozenState();
                 }
-                
                 return true;
             }
             return false;
         }
 
-        // ==================== POPUP SYSTEM ====================
+        // ==================== POPUP ====================
         function showPopup(title, message, timeBonus = null) {
             document.getElementById('popupTitle').textContent = title;
             document.getElementById('popupMessage').innerHTML = message;
-            
             const timeEl = document.getElementById('popupTime');
             if (timeBonus) {
                 timeEl.textContent = `+${formatTime(timeBonus)}`;
@@ -899,12 +1069,8 @@
             } else {
                 timeEl.classList.add('hidden');
             }
-            
             document.getElementById('popup').classList.add('active');
-            
-            if (navigator.vibrate) {
-                navigator.vibrate(timeBonus ? [100, 50, 100, 50, 200] : [100, 50, 100]);
-            }
+            if (navigator.vibrate) navigator.vibrate(timeBonus ? [100,50,100,50,200] : [100,50,100]);
         }
 
         function closePopup() {
@@ -915,9 +1081,7 @@
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => {
                 s.classList.remove('active');
-                setTimeout(() => {
-                    if (!s.classList.contains('active')) s.style.display = 'none';
-                }, 500);
+                setTimeout(() => { if (!s.classList.contains('active')) s.style.display = 'none'; }, 500);
             });
             
             const target = document.getElementById(screenId);
@@ -929,12 +1093,12 @@
             if (screenId === 'home') updateHome();
             if (screenId === 'friendsList') renderFriendsList();
             if (screenId === 'sendTime') updateSendTime();
-            if (screenId === 'playTokes') renderTokes();
+            if (screenId === 'playTokes') updatePlayTokes();
             if (screenId === 'makeFriend') updateMakeFriend();
             if (screenId === 'frozen') updateFrozen();
         }
 
-        // ==================== SPLASH 1 ====================
+        // ==================== SPLASH ====================
         let globalCountdown = 24 * 3600;
         setInterval(() => {
             globalCountdown--;
@@ -944,8 +1108,6 @@
         }, 1000);
 
         document.getElementById('splash1').addEventListener('click', () => {
-            if (!audioContext) initAudio();
-            
             if (state.user) {
                 checkInbox();
                 showScreen('home');
@@ -954,51 +1116,30 @@
                 setTimeout(() => {
                     document.getElementById('rule1').classList.add('show');
                     setTimeout(() => document.getElementById('rule2').classList.add('show'), 800);
-                    setTimeout(() => {
-                        document.getElementById('rule3').classList.add('show');
-                        setTimeout(() => {
-                            document.getElementById('splash2Hint').style.display = 'block';
-                        }, 1000);
-                    }, 1600);
+                    setTimeout(() => document.getElementById('rule3').classList.add('show'), 1600);
                 }, 100);
-            }
-        });
-
-        // ==================== SPLASH 2 ====================
-        document.getElementById('splash2').addEventListener('click', () => {
-            if (document.getElementById('rule3').classList.contains('show')) {
-                showScreen('register');
             }
         });
 
         // ==================== REGISTRO ====================
         const usernameInput = document.getElementById('usernameInput');
-        const idPreview = document.getElementById('idPreview');
-        const startBtn = document.getElementById('startBtn');
-
         usernameInput.addEventListener('input', (e) => {
             const val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
             e.target.value = val;
-            startBtn.disabled = val.length < 2;
-            
-            const uniqueId = generateId();
-            idPreview.textContent = `ID: ${uniqueId}`;
+            document.getElementById('startBtn').disabled = val.length < 2;
+            document.getElementById('idPreview').textContent = `ID: ${generateId()}`;
         });
 
-        startBtn.addEventListener('click', () => {
-            const username = usernameInput.value;
-            const userId = generateId();
-            
+        document.getElementById('startBtn').addEventListener('click', () => {
             state.user = {
-                id: userId,
-                name: username,
+                id: generateId(),
+                name: usernameInput.value,
                 timeMs: 72 * 3600000,
                 createdAt: Date.now(),
                 friendsMade: 0
             };
             state.lastUpdate = Date.now();
             saveState();
-            
             showScreen('home');
         });
 
@@ -1012,8 +1153,7 @@
             document.getElementById('userNameDisplay').textContent = state.user.name;
             document.getElementById('friendsCount').textContent = `${state.friends.length} ALIADOS`;
             
-            const timeStr = formatTime(state.user.timeMs);
-            timerEl.textContent = timeStr;
+            timerEl.textContent = formatTime(state.user.timeMs);
             
             const hours = state.user.timeMs / 3600000;
             timerEl.classList.remove('danger', 'frozen');
@@ -1029,67 +1169,50 @@
                 heartEl.classList.add('fast');
             }
             
-            // Check inbox
+            updateAudioIcon();
+            
             const totalInbox = state.inbox.gifts.length + state.inbox.tokes.length;
             const badge = document.getElementById('inboxBadge');
-            if (totalInbox > 0) {
-                badge.textContent = totalInbox;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+            badge.textContent = totalInbox;
+            badge.classList.toggle('hidden', totalInbox === 0);
         }
 
-        // Timer principal
         setInterval(() => {
             if (state.user && !state.frozenState.isFrozen) {
                 state.user.timeMs = Math.max(0, state.user.timeMs - 1000);
-                state.friends.forEach(f => {
-                    f.timeMs = Math.max(0, f.timeMs - 1000);
-                });
+                state.friends.forEach(f => f.timeMs = Math.max(0, f.timeMs - 1000));
                 state.lastUpdate = Date.now();
                 
-                if (state.user.timeMs <= 0) {
-                    enterFrozenState();
-                }
+                if (state.user.timeMs <= 0) enterFrozenState();
                 
-                const homeActive = document.getElementById('home').classList.contains('active');
-                const friendsActive = document.getElementById('friendsList').classList.contains('active');
-                
-                if (homeActive) updateHome();
-                if (friendsActive) renderFriendsList();
+                if (document.getElementById('home').classList.contains('active')) updateHome();
+                if (document.getElementById('friendsList').classList.contains('active')) renderFriendsList();
                 
                 saveState();
             }
         }, 1000);
 
-        // Botones menu
         document.getElementById('btnMakeFriend').addEventListener('click', () => showScreen('makeFriend'));
         document.getElementById('btnFriends').addEventListener('click', () => showScreen('friendsList'));
-        document.getElementById('btnSendTime').addEventListener('click', () => {
-            checkInbox();
-            showScreen('sendTime');
-        });
+        document.getElementById('btnSendTime').addEventListener('click', () => { checkInbox(); showScreen('sendTime'); });
         document.getElementById('btnPlay').addEventListener('click', () => showScreen('playTokes'));
 
-        // ==================== INBOX SYSTEM ====================
+        // ==================== INBOX ====================
         function checkInbox() {
             let message = '';
             let totalTime = 0;
             
-            // Procesar regalos
-            state.inbox.gifts.forEach(gift => {
-                totalTime += gift.amount;
-                message += `✓ ${gift.fromName} te envió ${formatTime(gift.amount)}<br>`;
+            state.inbox.gifts.forEach(g => {
+                totalTime += g.amount;
+                message += `✓ ${g.fromName} te envió ${formatTime(g.amount)}<br>`;
             });
             
-            // Procesar tokes
-            state.inbox.tokes.forEach(toke => {
-                if (toke.reward > 0) {
-                    totalTime += toke.reward * 3600000;
-                    message += `✓ ${toke.fromName}: "${toke.message}" → +${toke.reward}:00:00<br>`;
+            state.inbox.tokes.forEach(t => {
+                if (t.reward > 0) {
+                    totalTime += t.reward * 3600000;
+                    message += `✓ ${t.fromName}: "${t.message}" → +${t.reward}:00:00<br>`;
                 } else {
-                    message += `✓ ${toke.fromName}: "${toke.message}"<br>`;
+                    message += `✓ ${t.fromName}: "${t.message}"<br>`;
                 }
             });
             
@@ -1105,74 +1228,87 @@
         // ==================== MAKE FRIEND ====================
         function updateMakeFriend() {
             if (!state.user) return;
-            
             document.getElementById('myCode').textContent = state.user.id;
             
-            // Generar QR
             const container = document.getElementById('qrContainer');
             container.innerHTML = '';
             new QRCode(container, {
                 text: state.user.id,
-                width: 180,
-                height: 180,
+                width: 160,
+                height: 160,
                 colorDark: '#000000',
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.H
             });
         }
 
-        function startScanner() {
-            if (!html5QrCode) {
-                html5QrCode = new Html5Qrcode('qrReader');
+        function toggleScanner() {
+            const wrapper = document.getElementById('scannerWrapper');
+            const btn = document.getElementById('scannerBtn');
+            
+            if (wrapper.classList.contains('hidden')) {
+                wrapper.classList.remove('hidden');
+                btn.textContent = 'CERRAR CÁMARA';
+                startScanner();
+            } else {
+                wrapper.classList.add('hidden');
+                btn.textContent = 'ABRIR CÁMARA';
+                stopScanner();
             }
+        }
+
+        function startScanner() {
+            if (!html5QrCode) html5QrCode = new Html5Qrcode('qrReader');
             
             html5QrCode.start(
                 { facingMode: 'environment' },
-                { fps: 10, qrbox: { width: 200, height: 200 } },
+                { fps: 10, qrbox: { width: 180, height: 180 } },
                 (decodedText) => {
-                    html5QrCode.stop();
+                    stopScanner();
+                    document.getElementById('scannerWrapper').classList.add('hidden');
+                    document.getElementById('scannerBtn').textContent = 'ABRIR CÁMARA';
                     addFriendByCode(decodedText);
                 },
-                (error) => {}
-            ).catch(err => {
-                showPopup('ERROR', 'No se pudo acceder a la cámara. Usa el código manual.');
+                () => {}
+            ).catch(() => {
+                showPopup('ERROR', 'No se pudo acceder a la cámara');
             });
         }
 
+        function stopScanner() {
+            if (html5QrCode) {
+                html5QrCode.stop().catch(() => {});
+            }
+        }
+
         function addFriendManual() {
-            const code = document.getElementById('friendCodeInput').value.toUpperCase();
-            addFriendByCode(code);
+            addFriendByCode(document.getElementById('friendCodeInput').value.toUpperCase());
         }
 
         function addFriendByCode(code) {
             const msgEl = document.getElementById('addFriendMsg');
             
             if (!code || code.length !== 6) {
-                msgEl.textContent = 'CÓDIGO INVÁLIDO';
+                msgEl.textContent = 'CÓDIGO INVÁLIDO (6 CARACTERES)';
                 msgEl.style.color = 'var(--neon-red)';
                 return;
             }
-            
             if (code === state.user.id) {
                 msgEl.textContent = 'NO PUEDES AÑADIRTE A TI MISMO';
                 msgEl.style.color = 'var(--neon-red)';
                 return;
             }
-            
             if (state.friends.find(f => f.id === code)) {
                 msgEl.textContent = 'YA ES TU ALIADO';
                 msgEl.style.color = 'var(--neon-red)';
                 return;
             }
             
-            // Simular aliado (en MVP con backend real, validaría contra servidor)
-            const friendTime = (24 + Math.random() * 48) * 3600000;
             const rewardHours = REWARDS[Math.min(state.user.friendsMade, 4)];
-            
             const newFriend = {
                 id: code,
-                name: `ALIADO_${code.slice(0, 3)}`,
-                timeMs: friendTime,
+                name: `ALIADO_${code.slice(0,3)}`,
+                timeMs: (20 + Math.random() * 40) * 3600000,
                 addedAt: Date.now()
             };
             
@@ -1181,18 +1317,11 @@
             
             if (rewardHours > 0) {
                 state.user.timeMs += rewardHours * 3600000;
-                msgEl.textContent = `¡+${rewardHours}:00:00! ALIADO AÑADIDO`;
-                msgEl.style.color = 'var(--neon-green)';
-                
                 showPopup('NUEVO ALIADO', `Conectado con ${newFriend.name}`, rewardHours * 3600000);
-            } else {
-                msgEl.textContent = 'ALIADO AÑADIDO (SIN RECOMPENSA)';
-                msgEl.style.color = '#888';
             }
             
             document.getElementById('friendCodeInput').value = '';
             saveState();
-            
             setTimeout(() => showScreen('home'), 2000);
         }
 
@@ -1203,98 +1332,128 @@
             
             const sorted = [...state.friends].sort((a, b) => a.timeMs - b.timeMs);
             
-            sorted.forEach(friend => {
+            sorted.forEach(f => {
                 const div = document.createElement('div');
                 div.className = 'friend-item';
-                
-                const hours = friend.timeMs / 3600000;
-                const timeClass = hours < 12 ? 'danger' : '';
-                
+                const hours = f.timeMs / 3600000;
                 div.innerHTML = `
                     <div>
-                        <div class="friend-name">${friend.name}</div>
-                        <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 0.05rem;">${friend.id}</div>
+                        <div class="friend-name">${f.name}</div>
+                        <div style="font-size:0.6rem;opacity:0.4;">${f.id}</div>
                     </div>
-                    <div class="friend-time ${timeClass}">${formatTime(friend.timeMs)}</div>
+                    <div class="friend-time ${hours < 12 ? 'danger' : ''}">${formatTime(f.timeMs)}</div>
                 `;
-                
                 container.appendChild(div);
             });
             
             if (state.friends.length === 0) {
-                container.innerHTML = '<div style="text-align: center; opacity: 0.5; margin-top: 40%; font-size: 0.8rem; font-weight: 300;">SIN ALIADOS AÚN</div>';
+                container.innerHTML = '<div style="text-align:center;opacity:0.5;margin-top:40%;font-size:0.8rem;">SIN ALIADOS AÚN</div>';
             }
+        }
+
+        // ==================== CUSTOM SELECTS ====================
+        function toggleGiftSelect() {
+            document.getElementById('giftOptions').classList.toggle('open');
+        }
+
+        function toggleTokeSelect() {
+            document.getElementById('tokeOptions').classList.toggle('open');
+        }
+
+        function selectGiftFriend(friendId, friendName) {
+            selectedGiftFriend = friendId;
+            document.getElementById('giftTriggerText').textContent = friendName;
+            document.getElementById('giftOptions').classList.remove('open');
+            document.getElementById('sendGiftBtn').disabled = false;
+        }
+
+        function selectTokeFriend(friendId, friendName) {
+            selectedTokeFriend = friendId;
+            document.getElementById('tokeTriggerText').textContent = friendName;
+            document.getElementById('tokeOptions').classList.remove('open');
+            renderTokes();
         }
 
         // ==================== SEND TIME ====================
         function updateSendTime() {
-            const select = document.getElementById('giftTarget');
-            select.innerHTML = '<option value="">SELECCIONAR ALIADO</option>';
+            const options = document.getElementById('giftOptions');
+            options.innerHTML = '';
+            selectedGiftFriend = null;
+            document.getElementById('giftTriggerText').textContent = 'SELECCIONAR ALIADO';
+            document.getElementById('sendGiftBtn').disabled = true;
             
-            state.friends.forEach(f => {
-                const option = document.createElement('option');
-                option.value = f.id;
-                option.textContent = `${f.name} (${formatShortTime(f.timeMs)})`;
-                select.appendChild(option);
-            });
+            if (state.friends.length === 0) {
+                options.innerHTML = `
+                    <div class="no-friends-msg">
+                        NO TIENES ALIADOS<br>
+                        <button class="btn-primary no-friends-btn" onclick="showScreen('makeFriend')">AÑADIR ALIADO</button>
+                    </div>`;
+            } else {
+                state.friends.forEach(f => {
+                    const div = document.createElement('div');
+                    div.className = 'custom-option';
+                    div.innerHTML = `<span class="option-name">${f.name}</span><span class="option-time">${formatShortTime(f.timeMs)}</span>`;
+                    div.onclick = () => selectGiftFriend(f.id, f.name);
+                    options.appendChild(div);
+                });
+            }
             
             const canGift = state.dailyActions.giftsSent < 1;
             document.getElementById('giftStatus').textContent = canGift ? 'DISPONIBLE' : 'YA USADO HOY';
             document.getElementById('giftStatus').style.color = canGift ? 'var(--neon-green)' : '#555';
-            document.getElementById('sendGiftBtn').disabled = !canGift;
         }
 
         function sendGift() {
-            const targetId = document.getElementById('giftTarget').value;
-            if (!targetId) {
-                showPopup('ERROR', 'Selecciona un aliado');
-                return;
-            }
-            
+            if (!selectedGiftFriend) return;
             if (state.dailyActions.giftsSent >= 1) {
-                showPopup('LÍMITE ALCANZADO', 'Ya enviaste un regalo hoy. Vuelve mañana.');
+                showPopup('LÍMITE', 'Ya enviaste un regalo hoy');
                 return;
             }
             
-            const friend = state.friends.find(f => f.id === targetId);
-            if (!friend) return;
-            
-            // Añadir a "inbox" del amigo (simulado - en backend real sería push al servidor)
-            // Aquí simulamos que el amigo recibe guardando en su localStorage cuando se conecte
-            const giftData = {
-                fromId: state.user.id,
-                fromName: state.user.name,
-                amount: 3600000,
-                timestamp: Date.now()
-            };
-            
-            // Simular recepción inmediata para demo (en realidad iría a servidor)
+            const friend = state.friends.find(f => f.id === selectedGiftFriend);
             friend.timeMs += 3600000;
-            
             state.dailyActions.giftsSent = 1;
             saveState();
             
             showPopup('REGALO ENVIADO', `Enviaste 1:00:00 a ${friend.name}`, 0);
-            
             setTimeout(() => showScreen('home'), 2000);
         }
 
         // ==================== PLAY TOKES ====================
+        function updatePlayTokes() {
+            const options = document.getElementById('tokeOptions');
+            options.innerHTML = '';
+            selectedTokeFriend = null;
+            document.getElementById('tokeTriggerText').textContent = 'SELECCIONAR ALIADO';
+            
+            const availableFriends = state.friends.filter(f => !state.dailyActions.usedFriends.includes(f.id));
+            
+            if (availableFriends.length === 0) {
+                if (state.friends.length === 0) {
+                    options.innerHTML = `
+                        <div class="no-friends-msg">
+                            NO TIENES ALIADOS<br>
+                            <button class="btn-primary no-friends-btn" onclick="showScreen('makeFriend')">AÑADIR ALIADO</button>
+                        </div>`;
+                } else {
+                    options.innerHTML = '<div class="no-friends-msg">YA USASTE TOKES CON TODOS TUS ALIADOS HOY</div>';
+                }
+            } else {
+                availableFriends.forEach(f => {
+                    const div = document.createElement('div');
+                    div.className = 'custom-option';
+                    div.innerHTML = `<span class="option-name">${f.name}</span><span class="option-time">${formatShortTime(f.timeMs)}</span>`;
+                    div.onclick = () => selectTokeFriend(f.id, f.name);
+                    options.appendChild(div);
+                });
+            }
+            
+            renderTokes();
+        }
+
         function renderTokes() {
             const container = document.getElementById('tokesContainer');
             container.innerHTML = '';
-            
-            // Actualizar selector de aliados
-            const select = document.getElementById('tokeTarget');
-            select.innerHTML = '<option value="">SELECCIONAR ALIADO</option>';
-            state.friends.forEach(f => {
-                const used = state.dailyActions.usedFriends.includes(f.id);
-                const option = document.createElement('option');
-                option.value = f.id;
-                option.textContent = `${f.name}${used ? ' (YA USADO)' : ''}`;
-                if (used) option.disabled = true;
-                select.appendChild(option);
-            });
             
             const remaining = 5 - state.dailyActions.tokesUsed;
             document.getElementById('tokesLeft').textContent = `${remaining} restantes${remaining === 0 ? ' - BONUS DESBLOQUEADO' : ''}`;
@@ -1302,13 +1461,13 @@
             TOKE_MESSAGES.forEach((toke, idx) => {
                 const btn = document.createElement('button');
                 btn.className = 'toke-btn';
-                
                 const used = state.dailyActions.tokesUsed > idx;
                 if (used) btn.classList.add('used');
+                if (!used && selectedTokeFriend) btn.classList.add('selected');
                 
                 btn.innerHTML = `
-                    <div style="font-weight: 400; margin-bottom: 3px;">${toke.text}</div>
-                    <div style="font-size: 0.6rem; opacity: 0.6;">${toke.emoji}</div>
+                    <div style="font-weight:400;margin-bottom:3px;">${toke.text}</div>
+                    <div style="font-size:0.6rem;opacity:0.6;">${toke.emoji}</div>
                     ${toke.reward > 0 && !used ? `<span class="toke-reward">+${toke.reward}:00</span>` : ''}
                 `;
                 
@@ -1316,68 +1475,50 @@
                 container.appendChild(btn);
             });
             
-            // Bonus por usar los 5
             if (remaining === 0 && !state.dailyActions.gotBonus) {
                 state.user.timeMs += 6 * 3600000;
                 state.dailyActions.gotBonus = true;
                 saveState();
-                
-                setTimeout(() => {
-                    showPopup('BONUS DESBLOQUEADO', '¡Usaste 5 tokes! +6:00:00', 6 * 3600000);
-                }, 500);
+                setTimeout(() => showPopup('BONUS', '¡Usaste 5 tokes! +6:00:00', 6 * 3600000), 500);
             }
         }
 
         function sendToke(index) {
-            const targetId = document.getElementById('tokeTarget').value;
-            
-            if (!targetId) {
+            if (!selectedTokeFriend) {
                 showPopup('SELECCIONA ALIADO', 'Primero elige a quién enviar el toke');
                 return;
             }
-            
             if (state.dailyActions.tokesUsed >= 5) {
-                showPopup('LÍMITE ALCANZADO', 'Ya usaste tus 5 tokes de hoy');
-                return;
-            }
-            
-            if (state.dailyActions.usedFriends.includes(targetId)) {
-                showPopup('ALIADO YA USADO', 'Solo puedes enviar 1 toke por aliado al día');
+                showPopup('LÍMITE', 'Ya usaste tus 5 tokes de hoy');
                 return;
             }
             
             const toke = TOKE_MESSAGES[index];
-            const friend = state.friends.find(f => f.id === targetId);
+            const friend = state.friends.find(f => f.id === selectedTokeFriend);
             
-            // Aplicar efecto
-            let receivedMsg = '';
             if (toke.reward > 0) {
                 state.user.timeMs += toke.reward * 3600000;
-                receivedMsg = `Recibiste +${toke.reward}:00:00`;
             }
+            friend.timeMs += 0.5 * 3600000;
             
             state.dailyActions.tokesUsed++;
-            state.dailyActions.usedFriends.push(targetId);
-            
-            // Simular recepción en amigo
-            friend.timeMs += 0.5 * 3600000; // El amigo también gana un poco
+            state.dailyActions.usedFriends.push(selectedTokeFriend);
             
             saveState();
+            showPopup('TOKE ENVIADO', `A ${friend.name}:<br>"${toke.text}"<br>${toke.reward > 0 ? `+${toke.reward}:00:00 para ti` : ''}`, toke.reward * 3600000);
             
-            showPopup('TOKE ENVIADO', `Enviaste a ${friend.name}:<br>"${toke.text}"<br><br>${receivedMsg}`, toke.reward * 3600000);
-            
-            renderTokes();
+            selectedTokeFriend = null;
+            document.getElementById('tokeTriggerText').textContent = 'SELECCIONAR ALIADO';
+            updatePlayTokes();
         }
 
         // ==================== CONGELADO ====================
         function enterFrozenState() {
             if (state.frozenState.isFrozen) return;
-            
             state.frozenState.isFrozen = true;
             state.frozenState.frozenAt = Date.now();
             state.frozenState.dayCount = 0;
             saveState();
-            
             showScreen('frozen');
         }
 
@@ -1386,33 +1527,25 @@
             
             const frozenTime = Date.now() - state.frozenState.frozenAt;
             const hoursFrozen = Math.floor(frozenTime / 3600000);
-            
             const resurrectTime = Math.max(0, (48 * 3600000) - frozenTime);
+            
             document.getElementById('resurrectTimer').textContent = formatTime(resurrectTime);
             
-            let friendsLost = 0;
             let infoText = '';
-            
             if (hoursFrozen < 24) {
-                friendsLost = 0;
                 infoText = `DÍA 1: Pronto perderás 2 aliados<br>Espera ${formatTime(resurrectTime)} para resucitar con 12:00:00`;
             } else if (hoursFrozen < 48) {
-                friendsLost = 2;
                 infoText = `DÍA 2: Perdiste 2 aliados<br>Pronto perderás el resto<br>Espera ${formatTime(resurrectTime)} para resucitar`;
             } else {
                 resurrectNow();
                 return;
             }
             
-            // Aplicar pérdida progresiva
             const currentDay = Math.floor(hoursFrozen / 24);
             if (currentDay > state.frozenState.dayCount && state.friends.length > 0) {
                 state.frozenState.dayCount = currentDay;
-                if (currentDay === 1) {
-                    state.friends = state.friends.slice(0, Math.max(0, state.friends.length - 2));
-                } else if (currentDay === 2) {
-                    state.friends = [];
-                }
+                if (currentDay === 1) state.friends = state.friends.slice(0, Math.max(0, state.friends.length - 2));
+                else if (currentDay === 2) state.friends = [];
                 saveState();
             }
             
@@ -1424,64 +1557,34 @@
             state.frozenState.frozenAt = null;
             state.user.timeMs = 12 * 3600000;
             state.friends = [];
-            state.dailyActions = {
-                giftsSent: 0,
-                tokesUsed: 0,
-                lastReset: Date.now(),
-                gotBonus: false,
-                usedFriends: []
-            };
-            
+            state.dailyActions = { giftsSent: 0, tokesUsed: 0, lastReset: Date.now(), gotBonus: false, usedFriends: [] };
             saveState();
             showPopup('RESURRECCIÓN', 'Has vuelto con 12:00:00<br>0 aliados<br>Empieza de nuevo', 12 * 3600000);
-            
             setTimeout(() => showScreen('home'), 3000);
         }
 
-        // ==================== INICIALIZACIÓN ====================
+        // ==================== INIT ====================
         function init() {
-            const hasData = loadState();
-            
-            if (hasData && state.user) {
-                if (state.frozenState.isFrozen) {
-                    showScreen('frozen');
-                } else {
-                    showScreen('home');
-                }
+            if (loadState() && state.user) {
+                if (state.frozenState.isFrozen) showScreen('frozen');
+                else showScreen('home');
             }
         }
 
         function checkDailyReset() {
             if (!state.user) return;
-            
-            const now = Date.now();
-            const lastReset = state.dailyActions.lastReset;
-            const hoursSinceReset = (now - lastReset) / 3600000;
-            
-            if (hoursSinceReset >= 24) {
-                state.dailyActions.giftsSent = 0;
-                state.dailyActions.tokesUsed = 0;
-                state.dailyActions.usedFriends = [];
-                state.dailyActions.gotBonus = false;
-                state.dailyActions.lastReset = now;
+            const hoursSince = (Date.now() - state.dailyActions.lastReset) / 3600000;
+            if (hoursSince >= 24) {
+                state.dailyActions = { giftsSent: 0, tokesUsed: 0, lastReset: Date.now(), gotBonus: false, usedFriends: [] };
                 saveState();
             }
         }
 
-        // Iniciar
         init();
         checkDailyReset();
         setInterval(checkDailyReset, 3600000);
-        
         window.addEventListener('beforeunload', saveState);
-        
-        // Prevenir zoom
-        document.addEventListener('gesturestart', (e) => e.preventDefault());
-        
-        // Activar audio en primera interacción
-        document.addEventListener('click', () => {
-            if (!audioContext) initAudio();
-        }, { once: true });
+        document.addEventListener('gesturestart', e => e.preventDefault());
     </script>
 </body>
 </html>
