@@ -5,16 +5,20 @@ class App {
         this.userId = null;
         this.username = this.generateRandomId();
         this.countdownInterval = null;
-        this.ready = false;
     }
 
     init() {
-        // Esperar a que todo cargue
-        setTimeout(() => {
-            this.ready = true;
-            this.startCountdown();
-            console.log('App lista, click habilitado');
-        }, 800);
+        this.startCountdown();
+        
+        // Click/Touch en splash1
+        const splash1 = document.getElementById('splash1');
+        splash1.addEventListener('click', () => this.showRules());
+        splash1.addEventListener('touchstart', (e) => { e.preventDefault(); this.showRules(); });
+        
+        // Click/Touch en splash2
+        const splash2 = document.getElementById('splash2');
+        splash2.addEventListener('click', () => this.startGame());
+        splash2.addEventListener('touchstart', (e) => { e.preventDefault(); this.startGame(); });
     }
 
     generateRandomId() {
@@ -34,8 +38,8 @@ class App {
             const m = Math.floor((totalSeconds % 3600) / 60);
             const s = totalSeconds % 60;
             
-            const el = document.getElementById('countdownTimer');
-            if (el) el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            document.getElementById('countdownTimer').textContent = 
+                `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
             
             totalSeconds--;
             if (totalSeconds < 0) totalSeconds = 24 * 3600;
@@ -45,37 +49,19 @@ class App {
         this.countdownInterval = setInterval(update, 1000);
     }
 
-    showRules(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        
-        if (!this.ready) {
-            console.log('No ready aún');
-            return;
-        }
-        
-        console.log('Click detectado, pasando a frases');
-        
+    showRules() {
         clearInterval(this.countdownInterval);
         
         document.getElementById('splash1').classList.remove('active');
         document.getElementById('splash2').classList.add('active');
         
-        // Animar frases
         setTimeout(() => document.getElementById('rule1').classList.add('show'), 100);
         setTimeout(() => document.getElementById('rule2').classList.add('show'), 1200);
         setTimeout(() => document.getElementById('rule3').classList.add('show'), 2400);
     }
 
-    async startGame(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        
-        if (!this.ready) return;
-        
-        console.log('Iniciando juego con ID:', this.username);
-        
-        // Intentar crear usuario
+    async startGame() {
+        // Crear usuario
         try {
             const res = await fetch(`${API_URL}/register`, {
                 method: 'POST',
@@ -87,19 +73,14 @@ class App {
             
             if (data.user) {
                 this.userId = data.user.id;
-                console.log('Usuario creado:', this.userId);
-            } else if (data.error) {
-                // Si existe, generar nuevo
-                console.log('Usuario existe, generando nuevo...');
+            } else {
                 this.username = this.generateRandomId();
-                return this.startGame(event);
+                return this.startGame();
             }
         } catch (err) {
-            console.log('Error conexión, modo offline');
             this.userId = 'OFF-' + this.username;
         }
         
-        // Cambiar a HOME
         document.getElementById('splash2').classList.remove('active');
         document.getElementById('home').classList.add('active');
         
@@ -111,7 +92,7 @@ class App {
     startGameTimer() {
         let ms = 72 * 3600000;
         
-        const update = () => {
+        setInterval(() => {
             ms -= 1000;
             if (ms < 0) ms = 0;
             
@@ -119,18 +100,10 @@ class App {
             const m = Math.floor((ms % 3600000) / 60000);
             const s = Math.floor((ms % 60000) / 1000);
             
-            const el = document.getElementById('timerDisplay');
-            if (el) el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-        };
-        
-        update();
-        setInterval(update, 1000);
+            document.getElementById('timerDisplay').textContent = 
+                `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        }, 1000);
     }
-
-    makeFriend() { alert('MAKE FRIEND'); }
-    sendTime() { alert('SEND TIME'); }
-    playTokens() { alert('PLAY'); }
-    showFriends() { alert('FRIENDS'); }
 }
 
 window.onload = () => {
