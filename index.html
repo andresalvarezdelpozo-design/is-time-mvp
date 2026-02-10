@@ -6,150 +6,43 @@
     <title>IS TIME</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400&display=swap" rel="stylesheet">
     <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        html, body { 
-            font-family: 'Orbitron', monospace; 
-            background: #000; 
-            color: #00ff41; 
-            height: 100%; 
-            width: 100%;
-            overflow: hidden;
-            position: fixed;
-        }
-        
-        #app { 
-            height: 100%; 
-            width: 100%; 
-            position: relative;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { font-family: 'Orbitron', monospace; background: #000; color: #00ff41; height: 100%; width: 100%; overflow: hidden; position: fixed; }
+        #app { height: 100%; width: 100%; position: relative; }
         
         .screen { 
             position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
             display: none; 
             background: #000;
-            overflow: hidden;
         }
-        
-        .screen.active { 
-            display: flex; 
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+        .screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; }
         
         /* PANTALLA 1 */
-        #s1 { 
-            cursor: pointer; 
-            text-align: center;
-        }
+        #s1 { cursor: pointer; text-align: center; }
+        .logo { font-size: 3.5rem; letter-spacing: 0.8rem; text-shadow: 0 0 40px #00ff41; margin-bottom: 2rem; }
+        .timer { font-size: 1.8rem; letter-spacing: 0.3rem; text-shadow: 0 0 15px #00ff41; }
+        .hint { position: absolute; bottom: 15%; font-size: 0.7rem; opacity: 0.4; width: 100%; text-align: center; }
         
-        .logo { 
-            font-size: 3.5rem; 
-            letter-spacing: 0.8rem; 
-            text-shadow: 0 0 40px #00ff41; 
-            margin-bottom: 2rem; 
-        }
-        
-        .timer { 
-            font-size: 1.8rem; 
-            letter-spacing: 0.3rem; 
-            text-shadow: 0 0 15px #00ff41; 
-        }
-        
-        .hint { 
-            position: absolute; 
-            bottom: 15%; 
-            font-size: 0.7rem; 
-            opacity: 0.4; 
-            width: 100%;
-            text-align: center;
-        }
-        
-        /* PANTALLA 2 - CENTRADO ABSOLUTO */
-        #s2 { 
-            cursor: pointer;
-            text-align: center;
-        }
-        
-        .rules-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 90%;
-            max-width: 400px;
-        }
-        
-        .rule { 
-            font-size: 1.1rem; 
-            margin: 1.2rem 0; 
-            opacity: 0; 
-            transition: all 1s; 
-            text-shadow: 0 0 10px #00ff41;
-            width: 100%;
-            text-align: center;
-            line-height: 1.4;
-        }
-        
-        .rule.visible { 
-            opacity: 1; 
-            text-shadow: 0 0 25px #00ff41; 
-        }
+        /* PANTALLA 2 */
+        #s2 { cursor: pointer; text-align: center; }
+        .rules-container { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 90%; max-width: 400px; }
+        .rule { font-size: 1.1rem; margin: 1.2rem 0; opacity: 0; transition: all 1s; text-shadow: 0 0 10px #00ff41; width: 100%; text-align: center; line-height: 1.4; }
+        .rule.visible { opacity: 1; text-shadow: 0 0 25px #00ff41; }
         
         /* PANTALLA 3 */
-        #s3 { 
-            padding-top: 8vh; 
-            justify-content: flex-start; 
-            text-align: center;
-        }
+        #s3 { padding-top: 8vh; justify-content: flex-start; text-align: center; }
+        .id-display { position: absolute; top: 3vh; right: 5vw; font-size: 0.75rem; opacity: 0.5; }
+        .big-timer { font-size: 3rem; text-shadow: 0 0 30px #00ff41; margin-bottom: 2vh; margin-top: 5vh; }
+        .heart { font-size: 1.8rem; color: #ff0040; text-shadow: 0 0 15px #ff0040; margin-bottom: 4vh; animation: beat 1.2s infinite; }
+        @keyframes beat { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.2); opacity: 1; } }
         
-        .id-display { 
-            position: absolute; 
-            top: 3vh; 
-            right: 5vw; 
-            font-size: 0.75rem; 
-            opacity: 0.5; 
-        }
+        .buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 85%; max-width: 350px; }
         
-        .big-timer { 
-            font-size: 3rem; 
-            text-shadow: 0 0 30px #00ff41; 
-            margin-bottom: 2vh; 
-            margin-top: 5vh;
-        }
-        
-        .heart { 
-            font-size: 1.8rem; 
-            color: #ff0040; 
-            text-shadow: 0 0 15px #ff0040; 
-            margin-bottom: 4vh; 
-            animation: beat 1.2s infinite; 
-        }
-        
-        @keyframes beat { 
-            0%, 100% { transform: scale(1); opacity: 0.3; } 
-            50% { transform: scale(1.2); opacity: 1; } 
-        }
-        
-        .buttons { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 12px; 
-            width: 85%; 
-            max-width: 350px;
-        }
-        
+        /* BOTONES QUE FUNCIONAN EN iOS */
         .btn { 
+            display: block;
             padding: 22px 10px; 
             background: rgba(0,255,65,0.05); 
             border: 1px solid rgba(0,255,65,0.3); 
@@ -157,14 +50,17 @@
             font-family: inherit;
             font-size: 0.85rem;
             letter-spacing: 0.1rem;
-            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
             -webkit-appearance: none;
-            border-radius: 0;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            cursor: pointer;
+            touch-action: manipulation;
         }
         
-        .btn:active {
-            background: rgba(0,255,65,0.2);
-        }
+        .btn:active { background: rgba(0,255,65,0.3); }
 
         @media (max-width: 380px) {
             .logo { font-size: 2.8rem; letter-spacing: 0.5rem; }
@@ -177,14 +73,14 @@
 <body>
     <div id="app">
         <!-- PANTALLA 1 -->
-        <div id="s1" class="screen active" onclick="goToRules()">
+        <div id="s1" class="screen active">
             <div class="logo">IS TIME</div>
             <div class="timer" id="countdown">24:00:00</div>
             <div class="hint">TOCAR PARA CONTINUAR</div>
         </div>
 
         <!-- PANTALLA 2 -->
-        <div id="s2" class="screen" onclick="goToGame()">
+        <div id="s2" class="screen">
             <div class="rules-container">
                 <div class="rule" id="r1">TU TIEMPO DEFINE TU POSICION</div>
                 <div class="rule" id="r2">GANAS TIEMPO CON PERSONAS REALES</div>
@@ -199,43 +95,40 @@
             <div class="big-timer" id="gameTimer">72:00:00</div>
             <div class="heart">♥</div>
             <div class="buttons">
-                <div class="btn" onclick="doAction('MAKE FRIEND')">MAKE FRIEND</div>
-                <div class="btn" onclick="doAction('SEND TIME')">SEND TIME</div>
-                <div class="btn" onclick="doAction('PLAY')">PLAY</div>
-                <div class="btn" onclick="doAction('FRIENDS')">FRIENDS</div>
+                <a class="btn" href="javascript:void(0)">MAKE FRIEND</a>
+                <a class="btn" href="javascript:void(0)">SEND TIME</a>
+                <a class="btn" href="javascript:void(0)">PLAY</a>
+                <a class="btn" href="javascript:void(0)">FRIENDS</a>
             </div>
         </div>
     </div>
 
     <script>
-        // Contador 24h
-        let segundos = 24 * 3600;
+        // CONTADOR
+        var segundos = 24 * 3600;
         setInterval(function() {
             segundos--;
             if(segundos < 0) segundos = 24 * 3600;
             var h = Math.floor(segundos/3600);
             var m = Math.floor((segundos%3600)/60);
             var s = segundos%60;
-            document.getElementById('countdown').innerText = 
-                (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+            document.getElementById('countdown').innerText = (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
         }, 1000);
 
-        // Pantalla 1 -> 2
-        function goToRules() {
+        // PANTALLA 1 -> 2
+        document.getElementById('s1').addEventListener('click', function() {
             document.getElementById('s1').classList.remove('active');
             document.getElementById('s2').classList.add('active');
-            
             setTimeout(function() { document.getElementById('r1').classList.add('visible'); }, 200);
             setTimeout(function() { document.getElementById('r2').classList.add('visible'); }, 1500);
             setTimeout(function() { document.getElementById('r3').classList.add('visible'); }, 2800);
-        }
+        });
 
-        // Pantalla 2 -> 3
-        function goToGame() {
+        // PANTALLA 2 -> 3
+        document.getElementById('s2').addEventListener('click', function() {
             var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             var id = '';
             for(var i=0; i<6; i++) id += chars[Math.floor(Math.random()*chars.length)];
-            
             document.getElementById('uid').innerText = 'ID: ' + id;
             document.getElementById('s2').classList.remove('active');
             document.getElementById('s3').classList.add('active');
@@ -246,15 +139,22 @@
                 var h = Math.floor(ms/3600000);
                 var m = Math.floor((ms%3600000)/60000);
                 var s = Math.floor((ms%60000)/1000);
-                document.getElementById('gameTimer').innerText = 
-                    (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+                document.getElementById('gameTimer').innerText = (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
             }, 1000);
-        }
+        });
 
-        // Botones
-        function doAction(name) {
-            alert(name);
-        }
+        // BOTONES - Event listeners en lugar de onclick
+        var botones = document.querySelectorAll('.btn');
+        botones[0].addEventListener('click', function(e) { e.stopPropagation(); alert('MAKE FRIEND'); });
+        botones[1].addEventListener('click', function(e) { e.stopPropagation(); alert('SEND TIME'); });
+        botones[2].addEventListener('click', function(e) { e.stopPropagation(); alert('PLAY'); });
+        botones[3].addEventListener('click', function(e) { e.stopPropagation(); alert('FRIENDS'); });
+        
+        // También touchstart para iOS
+        botones[0].addEventListener('touchstart', function(e) { e.preventDefault(); e.stopPropagation(); alert('MAKE FRIEND'); });
+        botones[1].addEventListener('touchstart', function(e) { e.preventDefault(); e.stopPropagation(); alert('SEND TIME'); });
+        botones[2].addEventListener('touchstart', function(e) { e.preventDefault(); e.stopPropagation(); alert('PLAY'); });
+        botones[3].addEventListener('touchstart', function(e) { e.preventDefault(); e.stopPropagation(); alert('FRIENDS'); });
     </script>
 </body>
 </html>
