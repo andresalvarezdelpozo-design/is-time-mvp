@@ -1628,6 +1628,11 @@
             setTimeout(() => showScreen('home'), 3000);
         }
 
+        // ==================== EVENT LISTENER PARA SPLASH2 (CORRECCIÓN) ====================
+        document.getElementById('splash2').addEventListener('click', () => {
+            showScreen('register');
+        });
+
         // ==================== INIT ====================
         function init() {
             if (loadState() && state.user) {
