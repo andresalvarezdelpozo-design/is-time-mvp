@@ -2,43 +2,139 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IS TIME</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Orbitron', monospace; 
+            background: #000; 
+            color: #00ff41; 
+            height: 100vh; 
+            overflow: hidden;
+        }
+        #app { height: 100%; width: 100%; }
+        
+        .screen { 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            display: none; 
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+        .screen.active { display: flex; }
+        
+        /* Pantalla 1 */
+        #s1 { cursor: pointer; }
+        .logo { font-size: 4rem; letter-spacing: 1rem; text-shadow: 0 0 40px #00ff41; margin-bottom: 2rem; }
+        .timer { font-size: 2rem; letter-spacing: 0.3rem; text-shadow: 0 0 15px #00ff41; }
+        .hint { position: absolute; bottom: 15%; font-size: 0.7rem; opacity: 0.4; }
+        
+        /* Pantalla 2 */
+        #s2 { cursor: pointer; }
+        .rule { font-size: 1.3rem; margin: 1.5rem 0; opacity: 0; transition: all 1s; text-shadow: 0 0 10px #00ff41; }
+        .rule.visible { opacity: 1; text-shadow: 0 0 25px #00ff41; }
+        
+        /* Pantalla 3 */
+        #s3 { padding-top: 10vh; justify-content: flex-start; }
+        .id-display { position: absolute; top: 3vh; right: 5vw; font-size: 0.8rem; opacity: 0.5; }
+        .big-timer { font-size: 3.5rem; text-shadow: 0 0 30px #00ff41; margin-bottom: 3vh; }
+        .heart { font-size: 2rem; color: #ff0040; text-shadow: 0 0 15px #ff0040; margin-bottom: 5vh; animation: beat 1s infinite; }
+        @keyframes beat { 0%,100%{opacity:0.3} 50%{opacity:1} }
+        
+        .buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 85%; }
+        button { 
+            padding: 25px; 
+            background: rgba(0,255,65,0.05); 
+            border: 1px solid rgba(0,255,65,0.3); 
+            color: #00ff41; 
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
-        <div id="splash1" class="screen active">
-            <div class="center-content">
-                <h1 class="logo-main">IS TIME</h1>
-                <div class="timer-countdown" id="countdownTimer">24:00:00</div>
-            </div>
+        <!-- PANTALLA 1: IS TIME -->
+        <div id="s1" class="screen active" onclick="goToRules()">
+            <div class="logo">IS TIME</div>
+            <div class="timer" id="countdown">24:00:00</div>
             <div class="hint">TOCAR PARA CONTINUAR</div>
         </div>
 
-        <div id="splash2" class="screen">
-            <div class="center-content">
-                <p class="rule-line" id="rule1">TU TIEMPO DEFINE TU POSICION</p>
-                <p class="rule-line" id="rule2">GANAS TIEMPO CON PERSONAS REALES</p>
-                <p class="rule-line" id="rule3">CUANDO LLEGA A CERO, DESAPARECES</p>
-            </div>
+        <!-- PANTALLA 2: REGLAS -->
+        <div id="s2" class="screen" onclick="goToGame()">
+            <div class="rule" id="r1">TU TIEMPO DEFINE TU POSICION</div>
+            <div class="rule" id="r2">GANAS TIEMPO CON PERSONAS REALES</div>
+            <div class="rule" id="r3">CUANDO LLEGA A CERO, DESAPARECES</div>
             <div class="hint">TOCAR PARA INICIAR</div>
         </div>
 
-        <div id="home" class="screen">
-            <div class="user-id" id="userIdDisplay">ID: ----</div>
-            <div class="timer-main" id="timerDisplay">72:00:00</div>
-            <div class="pulse-heart">♥</div>
-            <div class="menu-grid">
-                <button class="menu-btn" id="btn-friend">MAKE FRIEND</button>
-                <button class="menu-btn" id="btn-send">SEND TIME</button>
-                <button class="menu-btn" id="btn-play">PLAY</button>
-                <button class="menu-btn" id="btn-friends">FRIENDS</button>
+        <!-- PANTALLA 3: JUEGO -->
+        <div id="s3" class="screen">
+            <div class="id-display" id="uid">ID: ----</div>
+            <div class="big-timer" id="gameTimer">72:00:00</div>
+            <div class="heart">♥</div>
+            <div class="buttons">
+                <button onclick="alert('MAKE FRIEND')">MAKE FRIEND</button>
+                <button onclick="alert('SEND TIME')">SEND TIME</button>
+                <button onclick="alert('PLAY')">PLAY</button>
+                <button onclick="alert('FRIENDS')">FRIENDS</button>
             </div>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <script>
+        // CONTADOR 24H
+        let segundos = 24 * 3600;
+        setInterval(() => {
+            segundos--;
+            if(segundos < 0) segundos = 24 * 3600;
+            const h = Math.floor(segundos/3600);
+            const m = Math.floor((segundos%3600)/60);
+            const s = segundos%60;
+            document.getElementById('countdown').innerText = 
+                String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+        }, 1000);
+
+        // PASAR A REGLAS
+        function goToRules() {
+            document.getElementById('s1').classList.remove('active');
+            document.getElementById('s2').classList.add('active');
+            
+            // Mostrar frases una por una
+            setTimeout(() => document.getElementById('r1').classList.add('visible'), 200);
+            setTimeout(() => document.getElementById('r2').classList.add('visible'), 1500);
+            setTimeout(() => document.getElementById('r3').classList.add('visible'), 2800);
+        }
+
+        // PASAR A JUEGO
+        function goToGame() {
+            // Generar ID aleatorio
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let id = '';
+            for(let i=0; i<6; i++) id += chars[Math.floor(Math.random()*chars.length)];
+            
+            document.getElementById('uid').innerText = 'ID: ' + id;
+            document.getElementById('s2').classList.remove('active');
+            document.getElementById('s3').classList.add('active');
+            
+            // Timer 72h
+            let ms = 72 * 3600000;
+            setInterval(() => {
+                ms -= 1000;
+                const h = Math.floor(ms/3600000);
+                const m = Math.floor((ms%3600000)/60000);
+                const s = Math.floor((ms%60000)/1000);
+                document.getElementById('gameTimer').innerText = 
+                    String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
